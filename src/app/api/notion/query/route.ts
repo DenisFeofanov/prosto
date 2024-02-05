@@ -1,12 +1,18 @@
 import { AMOUNT, DESCRIPTION, NAME, PRICE } from "@/shared/databaseProperties";
 import { Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
+import { NOTION_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
+import { formatApiError } from "@/lib/utils";
 
-const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
+// Initialize Notion client
+const notionClient = new Client({
+  auth: NOTION_TOKEN,
 });
 
-export async function POST() {
-  const databaseId = process.env.NOTION_DATABASE_ID;
+/**
+ * Handles the POST request to query the Notion database
+ */
+export async function POST(): Promise<Response> {
+  const databaseId = NOTION_DATABASE_ID;
 
   if (!databaseId) {
     return Response.json(
@@ -23,7 +29,7 @@ export async function POST() {
   }
 
   try {
-    const data = await notion.databases.query({
+    const data = await notionClient.databases.query({
       database_id: databaseId,
       sorts: [
         {
@@ -64,32 +70,24 @@ export async function POST() {
     return Response.json({ data });
   } catch (error) {
     console.error(error);
-    // type guarding
     if (isNotionClientError(error)) {
       if (error.code === ClientErrorCode.RequestTimeout) {
-        return Response.json(
-          { error },
-          {
-            status: 408,
-            statusText: "Request timed out while querying the Notion database",
-          }
+        return formatApiError(
+          error,
+          408,
+          "Request timed out while querying the Notion database"
         );
       }
-      return Response.json(
-        { error },
-        {
-          status: error.status,
-          statusText: "An error occurred while querying the Notion database",
-        }
+      return formatApiError(
+        error,
+        500,
+        "An error occurred while querying the Notion database"
       );
     }
-    return Response.json(
-      { error },
-      {
-        status: 500,
-        statusText:
-          "An unknown error occurred while querying the Notion database",
-      }
+    return formatApiError(
+      error,
+      500,
+      "An unknown error occurred while querying the Notion database"
     );
   }
 }

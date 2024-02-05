@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { fetchDatabase } from "../lib/utils";
+import { fetchBouquets } from "../lib/utils";
 
 export default function Home() {
   async function handleClick() {
     try {
-      const flowers = await fetchDatabase();
+      const flowers = await fetchBouquets();
       console.log(flowers);
     } catch (error) {
       console.log("TODO: display in UI:", error);
