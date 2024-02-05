@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { fetchBouquets } from "../lib/utils";
+import { fetchBouquets } from "@/lib/utils";
 
 export default function Home() {
   async function handleClick() {
