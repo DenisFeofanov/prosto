@@ -1,6 +1,5 @@
-import { ClientErrorCode, isNotionClientError } from "@notionhq/client";
+import { Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
 
-const { Client } = require("@notionhq/client");
 const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 });
@@ -8,9 +7,29 @@ const notion = new Client({
 export async function POST() {
   const databaseId = process.env.NOTION_DATABASE_ID;
 
+  if (!databaseId) {
+    return Response.json(
+      {
+        error: {
+          message: "Missing environment variable NOTION_DATABASE_ID",
+        },
+      },
+      {
+        status: 500,
+        statusText: "An error occurred while querying the Notion database",
+      }
+    );
+  }
+
   try {
     const response = await notion.databases.query({
       database_id: databaseId,
+      sorts: [
+        {
+          property: "Name",
+          direction: "ascending",
+        },
+      ],
     });
 
     return Response.json({ response });
