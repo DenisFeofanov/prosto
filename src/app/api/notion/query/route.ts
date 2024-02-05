@@ -1,3 +1,4 @@
+import { AMOUNT, DESCRIPTION, NAME, PRICE } from "@/shared/databaseProperties";
 import { Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
 
 const notion = new Client({
@@ -22,17 +23,45 @@ export async function POST() {
   }
 
   try {
-    const response = await notion.databases.query({
+    const data = await notion.databases.query({
       database_id: databaseId,
       sorts: [
         {
-          property: "Name",
+          property: NAME,
           direction: "ascending",
         },
       ],
+      filter: {
+        and: [
+          {
+            property: NAME,
+            title: {
+              is_not_empty: true,
+            },
+          },
+          {
+            property: AMOUNT,
+            number: {
+              is_not_empty: true,
+            },
+          },
+          {
+            property: DESCRIPTION,
+            rich_text: {
+              is_not_empty: true,
+            },
+          },
+          {
+            property: PRICE,
+            number: {
+              greater_than: 0,
+            },
+          },
+        ],
+      },
     });
 
-    return Response.json({ response });
+    return Response.json({ data });
   } catch (error) {
     console.error(error);
     // type guarding
