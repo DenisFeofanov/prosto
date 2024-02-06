@@ -46,5 +46,35 @@ export async function createOrder(order: Order) {
     return data;
   } catch (error) {
     console.error(error);
+    throw error;
+  }
+}
+
+export async function changeAmount(amount: number, id: string) {
+  try {
+    const response = await fetch("api/notion/pages", {
+      headers: {
+        contentType: "application/json",
+        accept: "application/json",
+      },
+      method: "PATCH",
+      body: JSON.stringify({
+        amount,
+        id,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Request failed with status ${response.status}: ${response.statusText}`
+      );
+    }
+
+    const data = response.json();
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }

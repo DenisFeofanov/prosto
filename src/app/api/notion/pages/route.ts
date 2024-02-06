@@ -1,5 +1,6 @@
 import { Order, OrderedItem } from "@/interfaces/Order";
 import { convertOrderToString } from "@/lib/utils";
+import { AMOUNT } from "@/shared/bouquetsDatabaseProperties";
 import { NOTION_ORDERS_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
 import {
   ADDRESS,
@@ -121,6 +122,24 @@ export async function POST(request: Request) {
       properties,
     });
 
+    return Response.json(response);
+  } catch (error) {
+    console.error(error);
+    return Response.json(error, { status: 500 });
+  }
+}
+
+export async function PATCH(request: Request) {
+  const { id, amount } = await request.json();
+  try {
+    const response = await notionClient.pages.update({
+      page_id: id,
+      properties: {
+        [AMOUNT]: {
+          number: amount,
+        },
+      },
+    });
     return Response.json(response);
   } catch (error) {
     console.error(error);
