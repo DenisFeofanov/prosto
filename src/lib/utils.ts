@@ -3,7 +3,9 @@ import { OrderedItem } from "@/interfaces/Order";
 import {
   AMOUNT,
   DESCRIPTION,
+  HAS_SIZE,
   NAME,
+  PHOTOS,
   PRICE,
 } from "@/shared/bouquetsDatabaseProperties";
 import { isFullPage } from "@notionhq/client";
@@ -19,7 +21,9 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
       flower.properties[PRICE].type === "number" &&
       flower.properties[NAME].type === "title" &&
       flower.properties[AMOUNT].type === "number" &&
-      flower.properties[DESCRIPTION].type === "rich_text"
+      flower.properties[DESCRIPTION].type === "rich_text" &&
+      flower.properties[HAS_SIZE].type === "checkbox" &&
+      flower.properties[PHOTOS].type === "files"
     ) {
       return {
         id: flower.id,
@@ -27,6 +31,20 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
         name: flower.properties[NAME].title[0].plain_text,
         description: flower.properties[DESCRIPTION].rich_text[0].plain_text,
         amount: flower.properties[AMOUNT].number as number,
+        hasSize: flower.properties[HAS_SIZE].checkbox,
+        photos: flower.properties[PHOTOS].files.map(file => {
+          if (file.type === "external") {
+            return file.external.url;
+          }
+
+          if (file.type === "file") {
+            return file.file.url;
+          }
+
+          throw new Error(
+            "Failed to parse photos. Check that the photos are in the correct format."
+          );
+        }),
       };
     } else {
       throw new Error(

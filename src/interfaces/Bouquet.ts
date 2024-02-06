@@ -4,4 +4,6 @@ export interface Bouquet {
   description: string;
   price: number;
   amount: number;
+  hasSize: boolean;
+  photos: string[];
 }

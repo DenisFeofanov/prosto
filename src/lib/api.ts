@@ -13,7 +13,7 @@ export async function fetchBouquets(): Promise<Bouquet[]> {
         `Request failed with status ${response.status}: ${response.statusText}`
       );
     }
-    const { data }: { data: QueryDatabaseResponse } = await response.json();
+    const data: QueryDatabaseResponse = await response.json();
 
     return parseBouquets(data);
   } catch (error) {

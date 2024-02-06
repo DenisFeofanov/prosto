@@ -72,7 +72,7 @@ export async function POST(): Promise<Response> {
       },
     });
 
-    return Response.json({ data });
+    return Response.json(data);
   } catch (error) {
     console.error(error);
     if (isNotionClientError(error)) {
