@@ -1,6 +1,11 @@
-import { AMOUNT, DESCRIPTION, NAME, PRICE } from "@/shared/databaseProperties";
+import {
+  AMOUNT,
+  DESCRIPTION,
+  NAME,
+  PRICE,
+} from "@/shared/bouquetsDatabaseProperties";
 import { Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
-import { NOTION_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
+import { NOTION_STOCK_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
 import { formatApiError } from "@/lib/utils";
 
 // Initialize Notion client
@@ -12,13 +17,13 @@ const notionClient = new Client({
  * Handles the POST request to query the Notion database
  */
 export async function POST(): Promise<Response> {
-  const databaseId = NOTION_DATABASE_ID;
+  const databaseId = NOTION_STOCK_DATABASE_ID;
 
   if (!databaseId) {
     return Response.json(
       {
         error: {
-          message: "Missing environment variable NOTION_DATABASE_ID",
+          message: "Missing environment variable NOTION_STOCK_DATABASE_ID",
         },
       },
       {

@@ -1,11 +1,16 @@
 import { Bouquet } from "@/interfaces/Bouquet";
-import { AMOUNT, DESCRIPTION, NAME, PRICE } from "@/shared/databaseProperties";
+import {
+  AMOUNT,
+  DESCRIPTION,
+  NAME,
+  PRICE,
+} from "@/shared/bouquetsDatabaseProperties";
 import { isFullPage } from "@notionhq/client";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export async function fetchBouquets(): Promise<Bouquet[]> {
   try {
-    const response = await fetch("/api/notion/query", {
+    const response = await fetch("/api/notion/databases/query", {
       method: "POST",
     });
     if (!response.ok) {
