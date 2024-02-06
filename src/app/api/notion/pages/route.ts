@@ -118,7 +118,7 @@ export async function POST() {
 
     return Response.json(response);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return Response.json(error, { status: 500 });
   }
 }

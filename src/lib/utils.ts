@@ -23,7 +23,7 @@ export async function fetchBouquets(): Promise<Bouquet[]> {
 
     return parseBouquets(data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 }
