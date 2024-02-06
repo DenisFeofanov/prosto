@@ -1,4 +1,4 @@
-import { Order } from "@/interfaces/Order";
+import { Order, OrderedItem } from "@/interfaces/Order";
 import { convertOrderToString } from "@/lib/utils";
 import { NOTION_ORDERS_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
 import {
@@ -6,7 +6,6 @@ import {
   CLIENT_NAME,
   CLIENT_PHONE,
   DELIVERY_TIME,
-  DELIVERY_TIME_OPTIONS,
   ORDER,
   PICKUP_TIME,
   RECIPIENT_NAME,
@@ -19,24 +18,37 @@ const notionClient = new Client({
   auth: NOTION_TOKEN,
 });
 
-const dummyOrder: Order[] = [
-  {
-    bouquet: "Вдохновение",
-    amount: 1,
-    size: "L",
-    price: 2000,
-    note: "with Love",
-  },
-  {
-    bouquet: "Сумерки",
-    amount: 1,
-    price: 2000,
-    note: "от Души",
-  },
-];
-
-export async function POST() {
+export async function POST(request: Request) {
+  // using "as" because request has typed body from function createOrder()
+  const { order } = (await request.json()) as { order: Order };
   const databaseId = NOTION_ORDERS_DATABASE_ID;
+  let properties,
+    sharedProperties = {
+      [TOTAL]: {
+        number: order.total,
+      },
+      [ORDER]: {
+        rich_text: [
+          {
+            text: {
+              content: convertOrderToString(order.items),
+            },
+          },
+        ],
+      },
+      [CLIENT_NAME]: {
+        title: [
+          {
+            text: {
+              content: order.clientName,
+            },
+          },
+        ],
+      },
+      [CLIENT_PHONE]: {
+        phone_number: order.clientPhone,
+      },
+    };
 
   if (!databaseId) {
     return Response.json(
@@ -52,68 +64,61 @@ export async function POST() {
     );
   }
 
-  try {
-    const response = await notionClient.pages.create({
-      parent: {
-        database_id: databaseId,
-      },
-      properties: {
-        [CLIENT_NAME]: {
-          title: [
-            {
-              text: {
-                content: "Prosto",
-              },
-            },
-          ],
-        },
-        [CLIENT_PHONE]: {
-          phone_number: "1234567890",
-        },
+  switch (order.kind) {
+    case "pickup":
+      properties = {
+        ...sharedProperties,
+
         [PICKUP_TIME]: {
           date: {
-            start: "2022-01-01T12:00:00Z",
+            start: order.pickupTime,
           },
         },
+      };
+      break;
+    case "delivery":
+      properties = {
+        ...sharedProperties,
         [RECIPIENT_NAME]: {
           rich_text: [
             {
               text: {
-                content: "Recipient",
+                content: order.recipientName,
               },
             },
           ],
         },
         [RECIPIENT_PHONE]: {
-          phone_number: "1234567890",
+          phone_number: order.recipientPhone,
         },
         [ADDRESS]: {
           rich_text: [
             {
               text: {
-                content: "123 Main St",
+                content: order.address,
               },
             },
           ],
         },
         [DELIVERY_TIME]: {
           select: {
-            name: DELIVERY_TIME_OPTIONS[3],
+            name: order.deliveryTime,
           },
         },
-        [TOTAL]: {
-          number: 2000,
-        },
-        [ORDER]: {
-          rich_text: [
-            {
-              text: {
-                content: convertOrderToString(dummyOrder),
-              },
-            },
-          ],
-        },
+      };
+      break;
+
+    default:
+      properties = sharedProperties;
+      break;
+  }
+
+  try {
+    const response = await notionClient.pages.create({
+      parent: {
+        database_id: databaseId,
       },
+      properties,
     });
 
     return Response.json(response);

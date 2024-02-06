@@ -1,5 +1,5 @@
 import { Bouquet } from "@/interfaces/Bouquet";
-import { Order } from "@/interfaces/Order";
+import { OrderedItem } from "@/interfaces/Order";
 import {
   AMOUNT,
   DESCRIPTION,
@@ -9,29 +9,10 @@ import {
 import { isFullPage } from "@notionhq/client";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 
-export async function fetchBouquets(): Promise<Bouquet[]> {
-  try {
-    const response = await fetch("/api/notion/databases/query", {
-      method: "POST",
-    });
-    if (!response.ok) {
-      throw new Error(
-        `Request failed with status ${response.status}: ${response.statusText}`
-      );
-    }
-    const { data }: { data: QueryDatabaseResponse } = await response.json();
-
-    return parseBouquets(data);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
 /**
  * Parses the response from the API into an array of Bouquet objects
  */
-function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
+export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
   return data.results.map(flower => {
     if (
       isFullPage(flower) &&
@@ -69,7 +50,7 @@ export function formatApiError(
   );
 }
 
-export function convertOrderToString(order: Order[]): string {
+export function convertOrderToString(order: OrderedItem[]): string {
   return order
     .reduce((acc, order) => {
       const size = order.size ? `размер ${order.size}, ` : "";
