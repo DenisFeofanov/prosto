@@ -5,7 +5,8 @@ export const RECIPIENT_NAME = "ФИО получателя";
 export const RECIPIENT_PHONE = "Телефон получателя";
 export const ADDRESS = "Адрес";
 export const DELIVERY_TIME = "Время доставки";
-export const NOTE = "Открытка";
+export const TOTAL = "Сумма заказа";
+export const ORDER = "Заказ";
 
 export const DELIVERY_TIME_OPTIONS = [
   "9:00 - 12:00",

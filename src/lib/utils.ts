@@ -1,4 +1,5 @@
 import { Bouquet } from "@/interfaces/Bouquet";
+import { Order } from "@/interfaces/Order";
 import {
   AMOUNT,
   DESCRIPTION,
@@ -66,4 +67,13 @@ export function formatApiError(
       statusText: message,
     }
   );
+}
+
+export function convertOrderToString(order: Order[]): string {
+  return order
+    .reduce((acc, order) => {
+      const size = order.size ? `размер ${order.size}, ` : "";
+      return `${acc}- ${order.bouquet}, ${order.amount} шт., ${size}цена ${order.price}р, открытка "${order.note}"\n`;
+    }, "")
+    .trimEnd();
 }

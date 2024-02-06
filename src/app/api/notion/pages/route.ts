@@ -1,3 +1,5 @@
+import { Order } from "@/interfaces/Order";
+import { convertOrderToString } from "@/lib/utils";
 import { NOTION_ORDERS_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
 import {
   ADDRESS,
@@ -5,16 +7,33 @@ import {
   CLIENT_PHONE,
   DELIVERY_TIME,
   DELIVERY_TIME_OPTIONS,
-  NOTE,
+  ORDER,
   PICKUP_TIME,
   RECIPIENT_NAME,
   RECIPIENT_PHONE,
+  TOTAL,
 } from "@/shared/ordersDatabaseProperties";
 import { Client } from "@notionhq/client";
 
 const notionClient = new Client({
   auth: NOTION_TOKEN,
 });
+
+const dummyOrder: Order[] = [
+  {
+    bouquet: "Вдохновение",
+    amount: 1,
+    size: "L",
+    price: 2000,
+    note: "with Love",
+  },
+  {
+    bouquet: "Сумерки",
+    amount: 1,
+    price: 2000,
+    note: "от Души",
+  },
+];
 
 export async function POST() {
   const databaseId = NOTION_ORDERS_DATABASE_ID;
@@ -82,11 +101,14 @@ export async function POST() {
             name: DELIVERY_TIME_OPTIONS[3],
           },
         },
-        [NOTE]: {
+        [TOTAL]: {
+          number: 2000,
+        },
+        [ORDER]: {
           rich_text: [
             {
               text: {
-                content: "Note",
+                content: convertOrderToString(dummyOrder),
               },
             },
           ],
