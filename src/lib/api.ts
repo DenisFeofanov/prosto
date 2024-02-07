@@ -7,6 +7,7 @@ import { isNotionClientError, ClientErrorCode } from "@notionhq/client";
 export async function fetchBouquets(): Promise<Bouquet[]> {
   try {
     const response = await fetch("/api/notion/databases/query", {
+      cache: "no-store",
       method: "POST",
     });
     if (!response.ok) {
