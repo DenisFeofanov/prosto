@@ -3,6 +3,7 @@ import {
   AMOUNT,
   DESCRIPTION,
   NAME,
+  PHOTOS,
   PRICE,
 } from "@/shared/bouquetsDatabaseProperties";
 import { NOTION_STOCK_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
@@ -59,6 +60,12 @@ export async function POST(): Promise<Response> {
             property: PRICE,
             number: {
               greater_than: 0,
+            },
+          },
+          {
+            property: PHOTOS,
+            files: {
+              is_not_empty: true,
             },
           },
         ],
