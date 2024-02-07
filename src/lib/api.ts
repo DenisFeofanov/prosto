@@ -2,6 +2,7 @@ import { Bouquet } from "@/interfaces/Bouquet";
 import { Order } from "@/interfaces/Order";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 import { parseBouquets } from "./utils";
+import { isNotionClientError, ClientErrorCode } from "@notionhq/client";
 
 export async function fetchBouquets(): Promise<Bouquet[]> {
   try {
@@ -10,7 +11,7 @@ export async function fetchBouquets(): Promise<Bouquet[]> {
     });
     if (!response.ok) {
       throw new Error(
-        `Request failed with status ${response.status}: ${response.statusText}`
+        `Request failed: ${response.status} ${await response.text()}`
       );
     }
     const data: QueryDatabaseResponse = await response.json();
@@ -77,4 +78,25 @@ export async function changeAmount(amount: number, id: string) {
     console.log(error);
     throw error;
   }
+}
+
+export function handleNotionApiError(error: unknown) {
+  console.error(error);
+  if (isNotionClientError(error)) {
+    if (error.code === ClientErrorCode.RequestTimeout) {
+      return new Response(error.message, {
+        status: 408,
+      });
+    }
+
+    return new Response(error.message, {
+      status: error.status,
+    });
+  }
+  return new Response(
+    "An unknown error occurred while querying the Notion database",
+    {
+      status: 500,
+    }
+  );
 }

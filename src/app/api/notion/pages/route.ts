@@ -1,4 +1,5 @@
-import { Order, OrderedItem } from "@/interfaces/Order";
+import { Order } from "@/interfaces/Order";
+import { handleNotionApiError } from "@/lib/api";
 import { convertOrderToString } from "@/lib/utils";
 import { AMOUNT } from "@/shared/bouquetsDatabaseProperties";
 import { NOTION_ORDERS_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
@@ -52,15 +53,10 @@ export async function POST(request: Request) {
     };
 
   if (!databaseId) {
-    return Response.json(
-      {
-        error: {
-          message: "Missing environment variable NOTION_ORDERS_DATABASE_ID",
-        },
-      },
+    return new Response(
+      "Missing environment variable NOTION_ORDERS_DATABASE_ID",
       {
         status: 500,
-        statusText: "An error occurred while querying the Notion database",
       }
     );
   }
@@ -123,9 +119,8 @@ export async function POST(request: Request) {
     });
 
     return Response.json(response);
-  } catch (error) {
-    console.error(error);
-    return Response.json(error, { status: 500 });
+  } catch (error: unknown) {
+    return handleNotionApiError(error);
   }
 }
 
@@ -141,8 +136,7 @@ export async function PATCH(request: Request) {
       },
     });
     return Response.json(response);
-  } catch (error) {
-    console.error(error);
-    return Response.json(error, { status: 500 });
+  } catch (error: unknown) {
+    return handleNotionApiError(error);
   }
 }

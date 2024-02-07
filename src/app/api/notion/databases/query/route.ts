@@ -1,12 +1,12 @@
+import { handleNotionApiError } from "@/lib/api";
 import {
   AMOUNT,
   DESCRIPTION,
   NAME,
   PRICE,
 } from "@/shared/bouquetsDatabaseProperties";
-import { Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
 import { NOTION_STOCK_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
-import { formatApiError } from "@/lib/utils";
+import { Client } from "@notionhq/client";
 
 // Initialize Notion client
 const notionClient = new Client({
@@ -20,16 +20,9 @@ export async function POST(): Promise<Response> {
   const databaseId = NOTION_STOCK_DATABASE_ID;
 
   if (!databaseId) {
-    return Response.json(
-      {
-        error: {
-          message: "Missing environment variable NOTION_STOCK_DATABASE_ID",
-        },
-      },
-      {
-        status: 500,
-        statusText: "An error occurred while querying the Notion database",
-      }
+    return new Response(
+      "Missing environment variable NOTION_STOCK_DATABASE_ID",
+      { status: 500 }
     );
   }
 
@@ -73,26 +66,7 @@ export async function POST(): Promise<Response> {
     });
 
     return Response.json(data);
-  } catch (error) {
-    console.error(error);
-    if (isNotionClientError(error)) {
-      if (error.code === ClientErrorCode.RequestTimeout) {
-        return formatApiError(
-          error,
-          408,
-          "Request timed out while querying the Notion database"
-        );
-      }
-      return formatApiError(
-        error,
-        500,
-        "An error occurred while querying the Notion database"
-      );
-    }
-    return formatApiError(
-      error,
-      500,
-      "An unknown error occurred while querying the Notion database"
-    );
+  } catch (error: unknown) {
+    return handleNotionApiError(error);
   }
 }

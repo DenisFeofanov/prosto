@@ -54,20 +54,6 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
   });
 }
 
-export function formatApiError(
-  error: any,
-  code: number,
-  message: string
-): Response {
-  return Response.json(
-    { error },
-    {
-      status: code,
-      statusText: message,
-    }
-  );
-}
-
 export function convertOrderToString(order: OrderedItem[]): string {
   return order
     .reduce((acc, order) => {
