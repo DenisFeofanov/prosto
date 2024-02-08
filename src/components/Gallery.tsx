@@ -9,7 +9,7 @@ interface Props {
 export default function Gallery({ bouquets }: Props) {
   return (
     <ul
-      className={`p-10 grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(4,minmax(0,300px))] lg:p-20 gap-10`}
+      className={`p-10 grid justify-center grid-cols-[repeat(1,minmax(0,300px))] sm:grid-cols-[repeat(2,minmax(0,300px))] md:grid-cols-[repeat(3,minmax(0,300px))] lg:grid-cols-[repeat(4,minmax(0,300px))] lg:p-20 gap-10`}
     >
       {bouquets.map(bouquet => (
         <li key={bouquet.id}>
