@@ -12,6 +12,7 @@ const config: Config = {
         "fine-pointer": {
           raw: "(pointer: fine)",
         },
+        "3xl": "2000px",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

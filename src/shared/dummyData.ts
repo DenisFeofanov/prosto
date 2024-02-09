@@ -42,7 +42,7 @@ export const dummyBouquets: Bouquet[] = [
   {
     id: "7479dc18-e69e-44ce-ab0e-f970f10edf37",
     price: 2000,
-    name: "Вдохновение",
+    name: "Букет с очень-очень длиииииинным названиием",
     description: "Крутой роскошный букет",
     amount: 12,
     hasSize: true,
@@ -82,7 +82,7 @@ export const dummyBouquets: Bouquet[] = [
     description: "Крутой роскошный букет",
     amount: 12,
     hasSize: true,
-    photos: ["https://prosto.na4u.ru/TEST_photo.jpg"],
+    photos: ["https://prosto.na4u.ru/TEST_photo2.jpg"],
   },
   {
     id: "4c4f0482-b508-495e-a8c4-d85babdac399",
@@ -100,7 +100,7 @@ export const dummyBouquets: Bouquet[] = [
     description: "Крутой роскошный букет",
     amount: 12,
     hasSize: true,
-    photos: ["https://prosto.na4u.ru/TEST_photo.jpg"],
+    photos: ["https://prosto.na4u.ru/TEST_photo2.jpg"],
   },
   {
     id: "c27ba8c6-a99f-4eb8-9704-e368fff0ce4c",

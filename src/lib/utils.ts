@@ -62,3 +62,7 @@ export function convertOrderToString(order: OrderedItem[]): string {
     }, "")
     .trimEnd();
 }
+
+export function formatPrice(price: number): string {
+  return `${price} руб.`;
+}
