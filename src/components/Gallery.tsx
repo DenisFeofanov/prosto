@@ -10,7 +10,7 @@ interface Props {
 export default function Gallery({ bouquets, onClick }: Props) {
   return (
     <ul
-      className={`p-10 grid justify-center items-start grid-cols-[repeat(1,minmax(0,300px))] sm:grid-cols-[repeat(2,minmax(0,300px))] md:grid-cols-[repeat(3,minmax(0,300px))] lg:grid-cols-[repeat(4,minmax(0,300px))] lg:p-20 gap-10`}
+      className={`p-10 grid justify-center items-start grid-cols-[repeat(1,minmax(0,18.75rem))] sm:grid-cols-[repeat(2,minmax(0,18.75rem))] md:grid-cols-[repeat(3,minmax(0,18.75rem))] lg:grid-cols-[repeat(4,minmax(0,18.75rem))] lg:p-20 gap-10`}
     >
       {bouquets.map(bouquet => (
         <li key={bouquet.id}>
@@ -22,8 +22,9 @@ export default function Gallery({ bouquets, onClick }: Props) {
             <Image
               className="rounded-md fine-pointer:group-hover:shadow-2xl"
               src={bouquet.photos[0]}
-              width={300}
-              height={300}
+              // aspect ratio for all photos
+              width={4000}
+              height={5000}
               alt="Фото букета"
               priority
             />
