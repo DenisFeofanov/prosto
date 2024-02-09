@@ -1,6 +1,8 @@
 import { Bouquet } from "@/interfaces/Bouquet";
 import { Typography } from "@mui/material";
 import Image from "next/image";
+import PrimaryButton from "./PrimaryButton";
+import { IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
 
 interface Props {
   bouquets: Bouquet[];
@@ -22,9 +24,8 @@ export default function Gallery({ bouquets, onClick }: Props) {
             <Image
               className="rounded-md fine-pointer:group-hover:shadow-2xl"
               src={bouquet.photos[0]}
-              // aspect ratio for all photos
-              width={4000}
-              height={5000}
+              width={IMAGE_WIDTH}
+              height={IMAGE_HEIGHT}
               alt="Фото букета"
               priority
             />
@@ -40,13 +41,9 @@ export default function Gallery({ bouquets, onClick }: Props) {
             </div>
           </button>
 
-          <button
-            className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            type="button"
-            onClick={() => console.log("TODO: buy bouquet")}
-          >
+          <PrimaryButton onClick={() => console.log("TODO: buy bouquet")}>
             Купить
-          </button>
+          </PrimaryButton>
         </li>
       ))}
     </ul>

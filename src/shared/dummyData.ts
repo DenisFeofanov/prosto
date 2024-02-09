@@ -43,7 +43,8 @@ export const dummyBouquets: Bouquet[] = [
     id: "7479dc18-e69e-44ce-ab0e-f970f10edf37",
     price: 2000,
     name: "Букет с очень-очень длиииииинным названиием",
-    description: "Крутой роскошный букет",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, itaque. Nobis expedita ab totam similique quaerat voluptatibus nostrum recusandae modi. Aliquid neque laborum delectus, temporibus magnam et repellendus a autem.",
     amount: 12,
     hasSize: true,
     photos: ["https://prosto.na4u.ru/TEST_photo.jpg"],
