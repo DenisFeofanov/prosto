@@ -1,9 +1,8 @@
 import { Bouquet } from "@/interfaces/Bouquet";
 import { formatPrice } from "@/lib/utils";
-import { IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
 import { CloseOutlined } from "@ant-design/icons";
-import Image from "next/image";
 import { useEffect, useRef } from "react";
+import BouquetCarousel from "./BouquetCarousel";
 import PrimaryButton from "./PrimaryButton";
 
 interface Props extends React.PropsWithChildren {
@@ -45,16 +44,10 @@ export default function BouquetModal({
               <CloseOutlined />
             </button>
 
-            <div className="flex flex-col items-start gap-4 lg:flex-row lg:gap-16">
-              <Image
-                className="rounded-md fine-pointer:group-hover:shadow-2xl"
-                src={bouquet.photos[0]}
-                width={IMAGE_WIDTH}
-                height={IMAGE_HEIGHT}
-                alt="Фото букета"
-              />
+            <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16">
+              <BouquetCarousel photos={bouquet.photos} />
 
-              <div>
+              <div className="mt-4">
                 <h2 className="text-2xl font-bold mb-4">{bouquet.name}</h2>
                 <p className="text-gray-600 mb-4">{bouquet.description}</p>
                 <p className="text-lg font-bold mb-4">

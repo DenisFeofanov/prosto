@@ -5,7 +5,6 @@ import Gallery from "@/components/Gallery";
 import { Bouquet } from "@/interfaces/Bouquet";
 import { changeAmount, createOrder, fetchBouquets } from "@/lib/api";
 import { dummyBouquets, dummyPickupOrder } from "@/shared/dummyData";
-import { Button } from "antd";
 import { useState } from "react";
 
 export default function Home() {

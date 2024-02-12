@@ -47,7 +47,11 @@ export const dummyBouquets: Bouquet[] = [
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, itaque. Nobis expedita ab totam similique quaerat voluptatibus nostrum recusandae modi. Aliquid neque laborum delectus, temporibus magnam et repellendus a autem.",
     amount: 12,
     hasSize: true,
-    photos: ["https://prosto.na4u.ru/TEST_photo.jpg"],
+    photos: [
+      "https://prosto.na4u.ru/TEST_photo.jpg",
+      "https://prosto.na4u.ru/TEST_photo2.jpg",
+      "https://prosto.na4u.ru/TEST_photo.jpg",
+    ],
   },
   {
     id: "59cc3179-e1cc-4115-b0af-d25c9c30aa35",
