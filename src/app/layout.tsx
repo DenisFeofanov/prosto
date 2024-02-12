@@ -2,6 +2,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { ConfigProvider } from "antd";
 
 export const metadata: Metadata = {
   title: "ПРОСТО",
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 const inter = Inter({
   weight: ["400", "700"],
   subsets: ["cyrillic"],
+  variable: "--font-inter",
 });
 
 export default function RootLayout({
@@ -21,7 +23,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body>
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <ConfigProvider
+            theme={{
+              token: {
+                fontFamily: "var(--font-inter)",
+              },
+            }}
+          >
+            {children}
+          </ConfigProvider>
+        </AntdRegistry>
       </body>
     </html>
   );
