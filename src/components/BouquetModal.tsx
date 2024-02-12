@@ -37,7 +37,7 @@ export default function BouquetModal({
         {bouquet ? (
           <div className="relative rounded-md bg-white pt-16 p-6 max-w-[30rem] lg:min-w-[80vw] lg:p-12">
             <button
-              className="absolute top-2 right-2 p-2 pt-0"
+              className="absolute top-2 right-2 p-2 lg:p-4"
               type="button"
               onClick={closeModal}
             >
