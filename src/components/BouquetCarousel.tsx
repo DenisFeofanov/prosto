@@ -3,6 +3,7 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Carousel } from "antd";
 import { CarouselRef } from "antd/es/carousel";
 import Image from "next/image";
+
 import { useRef } from "react";
 
 interface Props {
@@ -26,6 +27,12 @@ export default function BouquetCarousel({ photos }: Props) {
     <div className="relative">
       <Carousel ref={carouselRef}>
         {photos.map(photo => (
+          // <Image
+          //   key={photo}
+          //   src={photo}
+          //   width={IMAGE_WIDTH}
+          //   alt="Фото букета"
+          // />
           <Image
             key={photo}
             className="rounded-md fine-pointer:group-hover:shadow-2xl"
@@ -39,7 +46,7 @@ export default function BouquetCarousel({ photos }: Props) {
 
       {isMultiplePhotos && (
         <button
-          className="absolute top-0 left-0 bottom-0 w-[15%]"
+          className="absolute top-0 left-0 bottom-0 w-[15%] hover:bg-gradient-to-r hover:from-black/15 hover:to-transparent"
           onClick={goToPrevious}
         >
           <span className="absolute left-2 top-1/2 -translate-y-1/2">
@@ -55,7 +62,7 @@ export default function BouquetCarousel({ photos }: Props) {
 
       {isMultiplePhotos && (
         <button
-          className="absolute top-0 right-0 bottom-0 w-[15%]"
+          className="absolute top-0 right-0 bottom-0 w-[15%] hover:bg-gradient-to-l hover:from-black/15 hover:to-transparent"
           onClick={goToNext}
         >
           <span className="absolute right-2 top-1/2 -translate-y-1/2">
