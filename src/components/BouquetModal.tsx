@@ -3,6 +3,7 @@ import { formatPrice } from "@/lib/utils";
 import { Button, Modal } from "antd";
 import { useEffect, useRef } from "react";
 import BouquetCarousel from "./BouquetCarousel";
+import Counter from "./Counter";
 
 interface Props {
   bouquet: Bouquet | null;
@@ -43,7 +44,10 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
                 {formatPrice(bouquet.price)}
               </p>
 
+              <Counter amount={bouquet.amount} />
+
               <Button
+                className="mt-4"
                 onClick={() => console.log("TODO: buy bouquet")}
                 size="large"
               >
