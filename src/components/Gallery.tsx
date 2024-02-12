@@ -1,8 +1,7 @@
 import { Bouquet } from "@/interfaces/Bouquet";
-import { Typography } from "@mui/material";
+import { IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
 import Image from "next/image";
 import PrimaryButton from "./PrimaryButton";
-import { IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
 
 interface Props {
   bouquets: Bouquet[];
@@ -31,13 +30,7 @@ export default function Gallery({ bouquets, onClick }: Props) {
             />
             <div className="mt-4">
               <h2 className="text-2xl mb-4">{bouquet.name}</h2>
-              <Typography
-                className="mt-2"
-                variant="body2"
-                color="text.secondary"
-              >
-                {bouquet.price} руб.
-              </Typography>
+              <p className="mt-2">{bouquet.price} руб.</p>
             </div>
           </button>
 

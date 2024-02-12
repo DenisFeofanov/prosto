@@ -1,7 +1,7 @@
 import { Bouquet } from "@/interfaces/Bouquet";
 import { formatPrice } from "@/lib/utils";
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
-import CloseIcon from "@mui/icons-material/Close";
+import { CloseOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import PrimaryButton from "./PrimaryButton";
@@ -38,11 +38,11 @@ export default function BouquetModal({
         {bouquet ? (
           <div className="relative rounded-md bg-white pt-16 p-6 max-w-[30rem] lg:min-w-[80vw] lg:p-12">
             <button
-              className="absolute top-2 right-2 p-2"
+              className="absolute top-2 right-2 p-2 pt-0"
               type="button"
               onClick={closeModal}
             >
-              <CloseIcon />
+              <CloseOutlined />
             </button>
 
             <div className="flex flex-col items-start gap-4 lg:flex-row lg:gap-16">

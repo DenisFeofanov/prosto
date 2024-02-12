@@ -1,13 +1,17 @@
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 import type { Metadata } from "next";
 import "./globals.css";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import { ThemeProvider } from "@mui/material";
-import theme from "@/shared/theme";
+import { Inter } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "ПРОСТО",
   description: "Доставка цветов и букетов в Нижнем Тагиле",
 };
+
+const inter = Inter({
+  weight: ["400", "700"],
+  subsets: ["cyrillic"],
+});
 
 export default function RootLayout({
   children,
@@ -15,11 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <body>
-        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
-        </AppRouterCacheProvider>
+        <AntdRegistry>{children}</AntdRegistry>
       </body>
     </html>
   );
