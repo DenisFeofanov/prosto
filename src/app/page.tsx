@@ -47,11 +47,7 @@ export default function Home() {
   const isDev = false;
 
   return (
-    <BouquetModal
-      bouquet={selectedBouquet}
-      isOpen={bouquetIsOpened}
-      closeModal={() => setBouquetIsOpened(false)}
-    >
+    <>
       <main>
         {isDev && (
           <section className="p-4 text-center">
@@ -72,6 +68,11 @@ export default function Home() {
 
         <Gallery bouquets={dummyBouquets} onClick={openBouquet} />
       </main>
-    </BouquetModal>
+      <BouquetModal
+        bouquet={selectedBouquet}
+        isOpen={bouquetIsOpened}
+        closeModal={() => setBouquetIsOpened(false)}
+      />
+    </>
   );
 }
