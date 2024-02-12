@@ -47,32 +47,31 @@ export default function Home() {
   const isDev = false;
 
   return (
-    <>
-      <main>
-        {isDev && (
-          <section className="p-4 text-center">
-            <h3 className="bold text-3xl">Test buttons</h3>
-            <div className="flex gap-4 mb-4 justify-center border-b-1 border-black">
-              <button type="button" onClick={handleFetchClick}>
-                Fetch Bouquets
-              </button>
-              <button type="button" onClick={handleChangeAmount}>
-                Change amount
-              </button>
-              <button type="button" onClick={handleCreateOrderClick}>
-                Create Order
-              </button>
-            </div>
-          </section>
-        )}
+    <main>
+      {isDev && (
+        <section className="p-4 text-center">
+          <h3 className="bold text-3xl">Test buttons</h3>
+          <div className="flex gap-4 mb-4 justify-center border-b-1 border-black">
+            <button type="button" onClick={handleFetchClick}>
+              Fetch Bouquets
+            </button>
+            <button type="button" onClick={handleChangeAmount}>
+              Change amount
+            </button>
+            <button type="button" onClick={handleCreateOrderClick}>
+              Create Order
+            </button>
+          </div>
+        </section>
+      )}
 
-        <Gallery bouquets={dummyBouquets} onClick={openBouquet} />
-      </main>
+      <Gallery bouquets={dummyBouquets} onClick={openBouquet} />
+
       <BouquetModal
         bouquet={selectedBouquet}
         isOpen={bouquetIsOpened}
         closeModal={() => setBouquetIsOpened(false)}
       />
-    </>
+    </main>
   );
 }

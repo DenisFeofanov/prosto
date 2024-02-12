@@ -1,7 +1,7 @@
 import { Bouquet } from "@/interfaces/Bouquet";
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
+import { Button } from "antd";
 import Image from "next/image";
-import PrimaryButton from "./PrimaryButton";
 
 interface Props {
   bouquets: Bouquet[];
@@ -34,9 +34,12 @@ export default function Gallery({ bouquets, onClick }: Props) {
             </div>
           </button>
 
-          <PrimaryButton onClick={() => console.log("TODO: buy bouquet")}>
+          <Button
+            className="mt-4"
+            onClick={() => console.log("TODO: buy bouquet")}
+          >
             Купить
-          </PrimaryButton>
+          </Button>
         </li>
       ))}
     </ul>
