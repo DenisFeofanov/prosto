@@ -5,9 +5,14 @@ import { Button, Dropdown, MenuProps, Space } from "antd";
 interface Props {
   onSelect: ({ selectedKeys }: { selectedKeys: string[] }) => void;
   selectedSize: string;
+  disabled?: boolean;
 }
 
-export default function SizeDropdown({ onSelect, selectedSize }: Props) {
+export default function SizeDropdown({
+  onSelect,
+  selectedSize,
+  disabled,
+}: Props) {
   const items: MenuProps["items"] = SIZES.map(size => {
     return {
       label: size,
@@ -23,7 +28,7 @@ export default function SizeDropdown({ onSelect, selectedSize }: Props) {
   };
 
   return (
-    <Dropdown menu={menuProps}>
+    <Dropdown menu={menuProps} disabled={disabled}>
       <Button size="large">
         <Space>
           {`Размер ${selectedSize}`}

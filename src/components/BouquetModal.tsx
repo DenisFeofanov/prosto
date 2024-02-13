@@ -1,8 +1,8 @@
 import { Bouquet, Size } from "@/interfaces/Bouquet";
-import { useAppDispatch } from "@/lib/hooks";
-import { addToCart } from "@/lib/redux/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { addToCart, selectCart } from "@/lib/redux/cartSlice";
 import { formatPrice } from "@/lib/utils";
-import { Button, InputNumber, Modal, Space } from "antd";
+import { Button, InputNumber, Modal, Space, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 import BouquetCarousel from "./BouquetCarousel";
 import SizeDropdown from "./SizeDropdown";
@@ -18,6 +18,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
   const [size, setSize] = useState<Size>("S");
   const [amountOrdered, setAmountOrdered] = useState(1);
   const dispatch = useAppDispatch();
+  const cart = useAppSelector(selectCart);
 
   useEffect(() => {
     if (isOpen) {
@@ -28,6 +29,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
   }, [isOpen]);
 
   function handleAddToCartClick(bouquet: Bouquet) {
+    setAmountOrdered(1);
     dispatch(
       addToCart({
         ...bouquet,
@@ -47,6 +49,26 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
       setAmountOrdered(value);
     }
   }
+
+  function calculateRemainingAmount() {
+    if (bouquet === null) {
+      return 0;
+    }
+
+    const sameIdBouquets = cart.bouquets.filter(
+      orderedBouquet => orderedBouquet.id === bouquet.id
+    );
+
+    const alreadyOrderedAmount = sameIdBouquets.reduce(
+      (acc, orderedBouquet) => acc + orderedBouquet.amountOrdered,
+      0
+    );
+
+    return bouquet.amountAvailable - alreadyOrderedAmount;
+  }
+
+  const remainingAmount = calculateRemainingAmount();
+  const isDisabled = remainingAmount === 0;
 
   return (
     <>
@@ -73,21 +95,27 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
               <Space>
                 <InputNumber
                   min={1}
-                  max={bouquet.amountAvailable}
+                  max={remainingAmount}
                   keyboard={true}
-                  defaultValue={1}
                   value={amountOrdered}
                   onChange={handleChangeAmount}
                   size="large"
+                  disabled={isDisabled}
                 />
 
                 {bouquet.hasSize && (
                   <SizeDropdown
+                    disabled={isDisabled}
                     selectedSize={size}
                     onSelect={handleSizeSelect}
                   />
                 )}
               </Space>
+              {isDisabled && (
+                <Typography>
+                  В корзине уже максимальное кол-во - {bouquet.amountAvailable}
+                </Typography>
+              )}
 
               <div>
                 <Button
@@ -95,6 +123,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
                   onClick={() => handleAddToCartClick(bouquet)}
                   size="large"
                   type="primary"
+                  disabled={isDisabled}
                 >
                   Купить
                 </Button>
