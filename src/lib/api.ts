@@ -1,26 +1,86 @@
 import { Bouquet } from "@/interfaces/Bouquet";
 import { Order } from "@/interfaces/Order";
-import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
+import {
+  AMOUNT,
+  DESCRIPTION,
+  NAME,
+  PHOTOS,
+  PRICE,
+} from "@/shared/bouquetsDatabaseProperties";
+import { NOTION_STOCK_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
+import { Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
 import { parseBouquets } from "./utils";
-import { isNotionClientError, ClientErrorCode } from "@notionhq/client";
+
+// Initialize Notion client
+const notionClient = new Client({
+  auth: NOTION_TOKEN,
+});
 
 export async function fetchBouquets(): Promise<Bouquet[]> {
+  const databaseId = NOTION_STOCK_DATABASE_ID;
+
+  if (!databaseId) {
+    throw new Error("Missing environment variable NOTION_STOCK_DATABASE_ID");
+  }
+
   try {
-    const response = await fetch("/api/notion/databases/query", {
-      cache: "no-store",
-      method: "POST",
+    const data = await notionClient.databases.query({
+      database_id: databaseId,
+      sorts: [
+        {
+          property: NAME,
+          direction: "ascending",
+        },
+      ],
+      filter: {
+        and: [
+          {
+            property: NAME,
+            title: {
+              is_not_empty: true,
+            },
+          },
+          {
+            property: AMOUNT,
+            number: {
+              is_not_empty: true,
+            },
+          },
+          {
+            property: DESCRIPTION,
+            rich_text: {
+              is_not_empty: true,
+            },
+          },
+          {
+            property: PRICE,
+            number: {
+              greater_than: 0,
+            },
+          },
+          {
+            property: PHOTOS,
+            files: {
+              is_not_empty: true,
+            },
+          },
+        ],
+      },
     });
-    if (!response.ok) {
-      throw new Error(
-        `Request failed: ${response.status} ${await response.text()}`
-      );
-    }
-    const data: QueryDatabaseResponse = await response.json();
 
     return parseBouquets(data);
-  } catch (error) {
-    console.error(error);
-    throw error;
+  } catch (error: unknown) {
+    if (isNotionClientError(error)) {
+      if (error.code === ClientErrorCode.RequestTimeout) {
+        throw new Error(`408: ${error.message}`);
+      }
+
+      throw new Error(`${error.status} ${error.message}`);
+    }
+
+    throw new Error(
+      "An unknown error occurred while querying the Notion database"
+    );
   }
 }
 

@@ -24,7 +24,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
 
   return (
     <>
-      {bouquet ? (
+      {bouquet && (
         <Modal
           open={isOpen}
           onOk={closeModal}
@@ -56,8 +56,6 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
             </div>
           </div>
         </Modal>
-      ) : (
-        "Error: bouquet is null"
       )}
     </>
   );

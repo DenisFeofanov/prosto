@@ -27,12 +27,6 @@ export default function BouquetCarousel({ photos }: Props) {
     <div className="relative">
       <Carousel ref={carouselRef}>
         {photos.map(photo => (
-          // <Image
-          //   key={photo}
-          //   src={photo}
-          //   width={IMAGE_WIDTH}
-          //   alt="Фото букета"
-          // />
           <Image
             key={photo}
             className="rounded-md fine-pointer:group-hover:shadow-2xl"
