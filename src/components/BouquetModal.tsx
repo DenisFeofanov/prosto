@@ -6,6 +6,7 @@ import { Button, InputNumber, Modal, Space, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 import BouquetCarousel from "./BouquetCarousel";
 import SizeDropdown from "./SizeDropdown";
+import TextArea from "antd/es/input/TextArea";
 
 interface Props {
   bouquet: Bouquet | null;
@@ -17,6 +18,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const [size, setSize] = useState<Size>("S");
   const [amountOrdered, setAmountOrdered] = useState(1);
+  const [note, setNote] = useState("");
   const dispatch = useAppDispatch();
   const cart = useAppSelector(selectCart);
 
@@ -35,6 +37,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
         ...bouquet,
         amountOrdered,
         size,
+        note,
       })
     );
   }
@@ -83,7 +86,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
           <div className="pt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:pt-0 lg:gap-16">
             <BouquetCarousel photos={bouquet.photos} />
 
-            <div className="mt-4">
+            <div className="mt-4 lg:m-0">
               <h2 className="text-2xl font-bold mb-4">{bouquet.name}</h2>
               <p className="text-gray-600 mb-4 text-base">
                 {bouquet.description}
@@ -92,30 +95,42 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
                 {formatPrice(bouquet.price)}
               </p>
 
-              <Space>
-                <InputNumber
-                  min={1}
-                  max={remainingAmount}
-                  keyboard={true}
-                  value={amountOrdered}
-                  onChange={handleChangeAmount}
-                  size="large"
+              <Space direction="vertical" className="w-full">
+                <Space>
+                  <InputNumber
+                    min={1}
+                    max={remainingAmount}
+                    keyboard={true}
+                    value={amountOrdered}
+                    onChange={handleChangeAmount}
+                    size="large"
+                    disabled={isDisabled}
+                  />
+
+                  {bouquet.hasSize && (
+                    <SizeDropdown
+                      disabled={isDisabled}
+                      selectedSize={size}
+                      onSelect={handleSizeSelect}
+                    />
+                  )}
+                </Space>
+
+                {isDisabled && (
+                  <Typography>
+                    В корзине уже максимальное кол-во -{" "}
+                    {bouquet.amountAvailable}
+                  </Typography>
+                )}
+
+                <TextArea
+                  value={note}
+                  onChange={e => setNote(e.target.value)}
+                  placeholder="Открытка к букету"
+                  autoSize={{ minRows: 3, maxRows: 10 }}
                   disabled={isDisabled}
                 />
-
-                {bouquet.hasSize && (
-                  <SizeDropdown
-                    disabled={isDisabled}
-                    selectedSize={size}
-                    onSelect={handleSizeSelect}
-                  />
-                )}
               </Space>
-              {isDisabled && (
-                <Typography>
-                  В корзине уже максимальное кол-во - {bouquet.amountAvailable}
-                </Typography>
-              )}
 
               <div>
                 <Button
