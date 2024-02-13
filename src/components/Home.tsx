@@ -19,12 +19,11 @@ export default function Home({ bouquets }: Props) {
   const cart = useAppSelector(selectCart);
   const dispatch = useAppDispatch();
 
-  console.log(cart);
-
   function handleAddToCartClick(bouquet: Bouquet) {
     dispatch(
       addToCart({
         ...bouquet,
+        amountOrdered: 1,
         note: "with Love",
       })
     );
@@ -100,7 +99,6 @@ export default function Home({ bouquets }: Props) {
         bouquet={selectedBouquet}
         isOpen={bouquetIsOpened}
         closeModal={() => setBouquetIsOpened(false)}
-        onAddToCartClick={handleAddToCartClick}
       />
     </main>
   );

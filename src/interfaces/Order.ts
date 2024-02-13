@@ -3,6 +3,7 @@ import { Bouquet } from "./Bouquet";
 export interface OrderedBouquet extends Bouquet {
   size?: string;
   note?: string;
+  amountOrdered: number;
 }
 
 interface BaseOrder {

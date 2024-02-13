@@ -1,24 +1,23 @@
-import { Bouquet } from "@/interfaces/Bouquet";
+import { Bouquet, Size } from "@/interfaces/Bouquet";
+import { useAppDispatch } from "@/lib/hooks";
+import { addToCart } from "@/lib/redux/cartSlice";
 import { formatPrice } from "@/lib/utils";
-import { Button, Modal } from "antd";
-import { useEffect, useRef } from "react";
+import { Button, InputNumber, Modal, Space } from "antd";
+import { useEffect, useRef, useState } from "react";
 import BouquetCarousel from "./BouquetCarousel";
-import Counter from "./Counter";
+import SizeDropdown from "./SizeDropdown";
 
 interface Props {
   bouquet: Bouquet | null;
   isOpen: boolean;
   closeModal: () => void;
-  onAddToCartClick: (bouquet: Bouquet) => void;
 }
 
-export default function BouquetModal({
-  bouquet,
-  isOpen,
-  closeModal,
-  onAddToCartClick,
-}: Props) {
+export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
   const modalRef = useRef<HTMLDialogElement | null>(null);
+  const [size, setSize] = useState<Size>("S");
+  const [amountOrdered, setAmountOrdered] = useState(1);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isOpen) {
@@ -27,6 +26,27 @@ export default function BouquetModal({
       modalRef.current?.close();
     }
   }, [isOpen]);
+
+  function handleAddToCartClick(bouquet: Bouquet) {
+    dispatch(
+      addToCart({
+        ...bouquet,
+        amountOrdered,
+        size,
+      })
+    );
+  }
+
+  function handleSizeSelect({ selectedKeys }: { selectedKeys: string[] }) {
+    // forgive me. Dropdown just can't accept Size[] for some reason
+    setSize(selectedKeys[0] as Size);
+  }
+
+  function handleChangeAmount(value: number | null) {
+    if (value !== null) {
+      setAmountOrdered(value);
+    }
+  }
 
   return (
     <>
@@ -50,15 +70,35 @@ export default function BouquetModal({
                 {formatPrice(bouquet.price)}
               </p>
 
-              <Counter amount={bouquet.amount} />
+              <Space>
+                <InputNumber
+                  min={1}
+                  max={bouquet.amountAvailable}
+                  keyboard={true}
+                  defaultValue={1}
+                  value={amountOrdered}
+                  onChange={handleChangeAmount}
+                  size="large"
+                />
 
-              <Button
-                className="mt-4"
-                onClick={() => onAddToCartClick(bouquet)}
-                size="large"
-              >
-                Купить
-              </Button>
+                {bouquet.hasSize && (
+                  <SizeDropdown
+                    selectedSize={size}
+                    onSelect={handleSizeSelect}
+                  />
+                )}
+              </Space>
+
+              <div>
+                <Button
+                  className="mt-4"
+                  onClick={() => handleAddToCartClick(bouquet)}
+                  size="large"
+                  type="primary"
+                >
+                  Купить
+                </Button>
+              </div>
             </div>
           </div>
         </Modal>

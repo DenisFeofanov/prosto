@@ -30,7 +30,7 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
         price: flower.properties[PRICE].number as number,
         name: flower.properties[NAME].title[0].plain_text,
         description: flower.properties[DESCRIPTION].rich_text[0].plain_text,
-        amount: flower.properties[AMOUNT].number as number,
+        amountAvailable: flower.properties[AMOUNT].number as number,
         hasSize: flower.properties[HAS_SIZE].checkbox,
         photos: flower.properties[PHOTOS].files.map(file => {
           if (file.type === "external") {
@@ -59,7 +59,7 @@ export function convertOrderToString(order: OrderedBouquet[]): string {
     .reduce((acc, order) => {
       const size = order.size ? `размер ${order.size}, ` : "";
       const note = order.note ? `открытка "${order.note}"` : "";
-      return `${acc}- ${order.name}, ${order.amount} шт., ${size}цена ${order.price}р, ${note}\n`;
+      return `${acc}- ${order.name}, ${order.amountOrdered} шт., ${size}цена ${order.price}р, ${note}\n`;
     }, "")
     .trimEnd();
 }

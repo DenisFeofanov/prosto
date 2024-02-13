@@ -39,7 +39,11 @@ export default function Gallery({
             </div>
           </button>
 
-          <Button className="mt-4" onClick={() => onAddToCartClick(bouquet)}>
+          <Button
+            className="mt-4"
+            onClick={() => onAddToCartClick(bouquet)}
+            type="primary"
+          >
             Купить
           </Button>
         </li>
