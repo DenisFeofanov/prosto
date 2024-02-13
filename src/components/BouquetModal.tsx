@@ -67,6 +67,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
       onCancel={closeModal}
       className="w-auto max-w-[30rem] lg:min-w-[80vw]"
       footer={null}
+      centered
     >
       <div className="pt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:pt-0 lg:gap-16">
         <BouquetCarousel photos={bouquet.photos} />
