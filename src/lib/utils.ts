@@ -10,6 +10,7 @@ import {
 } from "@/shared/bouquetsDatabaseProperties";
 import { isFullPage } from "@notionhq/client";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
+import { CartState } from "./redux/cartSlice";
 
 /**
  * Parses the response from the API into an array of Bouquet objects
@@ -66,4 +67,24 @@ export function convertOrderToString(order: OrderedBouquet[]): string {
 
 export function formatPrice(price: number): string {
   return `${price} руб.`;
+}
+
+export function calculateRemainingAmount(
+  bouquet: Bouquet,
+  cart: CartState
+): number {
+  if (bouquet === null) {
+    return 0;
+  }
+
+  const sameIdBouquets = cart.bouquets.filter(
+    orderedBouquet => orderedBouquet.id === bouquet.id
+  );
+
+  const alreadyOrderedAmount = sameIdBouquets.reduce(
+    (acc, orderedBouquet) => acc + orderedBouquet.amountOrdered,
+    0
+  );
+
+  return bouquet.amountAvailable - alreadyOrderedAmount;
 }

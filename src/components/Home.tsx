@@ -1,13 +1,13 @@
 "use client";
 
 import BouquetModal from "@/components/BouquetModal";
-import Gallery from "@/components/Gallery";
 import { Bouquet } from "@/interfaces/Bouquet";
 import { changeAmount, createOrder, fetchBouquets } from "@/lib/api";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addToCart, selectCart } from "@/lib/redux/cartSlice";
 import { dummyPickupOrder } from "@/shared/dummyData";
 import { useState } from "react";
+import Card from "./Card";
 
 interface Props {
   bouquets: Bouquet[];
@@ -88,12 +88,20 @@ export default function Home({ bouquets }: Props) {
           </div>
         </section>
       )}
-
-      <Gallery
-        bouquets={bouquets}
-        onCardClick={openBouquet}
-        onAddToCartClick={handleAddToCartClick}
-      />
+      <ul
+        className={`p-10 grid justify-center items-start grid-cols-[repeat(1,minmax(0,18.75rem))] sm:grid-cols-[repeat(2,minmax(0,18.75rem))] md:grid-cols-[repeat(3,minmax(0,18.75rem))] lg:grid-cols-[repeat(4,minmax(0,18.75rem))] lg:p-20 gap-10`}
+      >
+        {bouquets.map(bouquet => (
+          <li key={bouquet.id}>
+            <Card
+              bouquet={bouquet}
+              key={bouquet.id}
+              onCardClick={openBouquet}
+              onAddToCartClick={handleAddToCartClick}
+            />
+          </li>
+        ))}
+      </ul>
 
       <BouquetModal
         bouquet={selectedBouquet}

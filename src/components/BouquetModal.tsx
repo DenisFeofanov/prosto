@@ -1,7 +1,7 @@
 import { Bouquet, Size } from "@/interfaces/Bouquet";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addToCart, selectCart } from "@/lib/redux/cartSlice";
-import { formatPrice } from "@/lib/utils";
+import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
 import { Button, InputNumber, Modal, Space, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 import BouquetCarousel from "./BouquetCarousel";
@@ -55,100 +55,76 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
     }
   }
 
-  function calculateRemainingAmount() {
-    if (bouquet === null) {
-      return 0;
-    }
+  if (bouquet === null) return;
 
-    const sameIdBouquets = cart.bouquets.filter(
-      orderedBouquet => orderedBouquet.id === bouquet.id
-    );
-
-    const alreadyOrderedAmount = sameIdBouquets.reduce(
-      (acc, orderedBouquet) => acc + orderedBouquet.amountOrdered,
-      0
-    );
-
-    return bouquet.amountAvailable - alreadyOrderedAmount;
-  }
-
-  const remainingAmount = calculateRemainingAmount();
+  const remainingAmount = calculateRemainingAmount(bouquet, cart);
   const isDisabled = remainingAmount === 0;
 
   return (
-    <>
-      {bouquet && (
-        <Modal
-          open={isOpen}
-          onOk={closeModal}
-          onCancel={closeModal}
-          className="w-auto max-w-[30rem] lg:min-w-[80vw]"
-          footer={null}
-        >
-          <div className="pt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:pt-0 lg:gap-16">
-            <BouquetCarousel photos={bouquet.photos} />
+    <Modal
+      open={isOpen}
+      onOk={closeModal}
+      onCancel={closeModal}
+      className="w-auto max-w-[30rem] lg:min-w-[80vw]"
+      footer={null}
+    >
+      <div className="pt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:pt-0 lg:gap-16">
+        <BouquetCarousel photos={bouquet.photos} />
 
-            <div className="mt-4 lg:m-0">
-              <h2 className="text-2xl font-bold mb-4">{bouquet.name}</h2>
-              <p className="text-gray-600 mb-4 text-base">
-                {bouquet.description}
-              </p>
-              <p className="text-lg font-bold mb-4">
-                {formatPrice(bouquet.price)}
-              </p>
+        <div className="mt-4 lg:m-0">
+          <h2 className="text-2xl font-bold mb-4">{bouquet.name}</h2>
+          <p className="text-gray-600 mb-4 text-base">{bouquet.description}</p>
+          <p className="text-lg font-bold mb-4">{formatPrice(bouquet.price)}</p>
 
-              <Space direction="vertical" className="w-full">
-                <Space>
-                  <InputNumber
-                    min={1}
-                    max={remainingAmount || 1}
-                    keyboard={true}
-                    value={amountOrdered}
-                    onChange={handleChangeAmount}
-                    size="large"
-                    disabled={isDisabled}
-                  />
+          <Space direction="vertical" className="w-full">
+            <Space>
+              <InputNumber
+                min={1}
+                max={remainingAmount || 1}
+                keyboard={true}
+                value={amountOrdered}
+                onChange={handleChangeAmount}
+                size="large"
+                disabled={isDisabled}
+              />
 
-                  {bouquet.hasSize && (
-                    <SizeDropdown
-                      disabled={isDisabled}
-                      selectedSize={size}
-                      onSelect={handleSizeSelect}
-                    />
-                  )}
-                </Space>
-
-                {isDisabled && (
-                  <Typography>
-                    В корзине уже максимальное кол-во -{" "}
-                    {bouquet.amountAvailable}
-                  </Typography>
-                )}
-
-                <TextArea
-                  value={note}
-                  onChange={e => setNote(e.target.value)}
-                  placeholder="Открытка к букету"
-                  autoSize={{ minRows: 3, maxRows: 10 }}
+              {bouquet.hasSize && (
+                <SizeDropdown
                   disabled={isDisabled}
+                  selectedSize={size}
+                  onSelect={handleSizeSelect}
                 />
-              </Space>
+              )}
+            </Space>
 
-              <div>
-                <Button
-                  className="mt-4"
-                  onClick={() => handleAddToCartClick(bouquet)}
-                  size="large"
-                  type="primary"
-                  disabled={isDisabled}
-                >
-                  Купить
-                </Button>
-              </div>
-            </div>
+            {isDisabled && (
+              <Typography>
+                В корзине уже максимальное кол-во - {bouquet.amountAvailable}
+              </Typography>
+            )}
+
+            <TextArea
+              value={note}
+              onChange={e => setNote(e.target.value)}
+              placeholder="Открытка к букету"
+              autoSize={{ minRows: 3, maxRows: 10 }}
+              disabled={isDisabled}
+            />
+          </Space>
+
+          <div>
+            <Button
+              className="mt-4"
+              onClick={() => handleAddToCartClick(bouquet)}
+              size="large"
+              type="primary"
+              disabled={isDisabled}
+            >
+              Купить
+            </Button>
           </div>
-        </Modal>
-      )}
-    </>
+        </div>
+      </div>
+    </Modal>
   );
 }
