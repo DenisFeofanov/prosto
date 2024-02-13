@@ -32,6 +32,8 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
 
   function handleAddToCartClick(bouquet: Bouquet) {
     setAmountOrdered(1);
+    setSize("S");
+    setNote("");
     dispatch(
       addToCart({
         ...bouquet,
@@ -99,7 +101,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
                 <Space>
                   <InputNumber
                     min={1}
-                    max={remainingAmount}
+                    max={remainingAmount || 1}
                     keyboard={true}
                     value={amountOrdered}
                     onChange={handleChangeAmount}
