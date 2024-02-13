@@ -62,7 +62,7 @@ export default function Home({ bouquets }: Props) {
   }
 
   // TODO remove dev mode
-  const isDev = true;
+  const isDev = false;
 
   return (
     <main>

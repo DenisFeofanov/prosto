@@ -1,9 +1,10 @@
+import Cart from "@/components/Cart";
+import { StyleProvider } from "@/lib/providers";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { StyleProvider } from "@/lib/providers";
 
 export const metadata: Metadata = {
   title: "ПРОСТО",
@@ -34,6 +35,7 @@ export default function RootLayout({
               }}
             >
               {children}
+              <Cart />
             </ConfigProvider>
           </StyleProvider>
         </AntdRegistry>
