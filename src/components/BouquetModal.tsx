@@ -9,9 +9,15 @@ interface Props {
   bouquet: Bouquet | null;
   isOpen: boolean;
   closeModal: () => void;
+  onAddToCartClick: (bouquet: Bouquet) => void;
 }
 
-export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
+export default function BouquetModal({
+  bouquet,
+  isOpen,
+  closeModal,
+  onAddToCartClick,
+}: Props) {
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
@@ -48,7 +54,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
 
               <Button
                 className="mt-4"
-                onClick={() => console.log("TODO: buy bouquet")}
+                onClick={() => onAddToCartClick(bouquet)}
                 size="large"
               >
                 Купить

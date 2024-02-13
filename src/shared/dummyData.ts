@@ -1,19 +1,26 @@
 import { Bouquet } from "@/interfaces/Bouquet";
-import { OrderedItem, Order } from "@/interfaces/Order";
+import { OrderedBouquet, Order } from "@/interfaces/Order";
 
-export const dummyOrderedItems: OrderedItem[] = [
+export const dummyOrderedItems: OrderedBouquet[] = [
   {
-    bouquet: "Вдохновение",
-    amount: 1,
-    size: "L",
-    price: 2000,
+    id: "3782d2e3-9027-442f-8322-664814ebf8b7",
+    price: 30000,
+    name: "Сумерки",
+    description: "Тоже ничего такой",
+    amount: 10,
+    hasSize: false,
+    photos: ["https://prosto.na4u.ru/photo_2024-02-13_12-28-33.jpg"],
     note: "with Love",
   },
   {
-    bouquet: "Сумерки",
-    amount: 1,
-    price: 2000,
-    note: "от Души",
+    id: "3782d2e3-9027-442f-8322-664814ebf8b7",
+    price: 30000,
+    name: "Сумерки",
+    description: "Тоже ничего такой",
+    amount: 10,
+    hasSize: false,
+    photos: ["https://prosto.na4u.ru/photo_2024-02-13_12-28-33.jpg"],
+    note: "with Love",
   },
 ];
 

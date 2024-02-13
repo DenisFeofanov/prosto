@@ -4,6 +4,8 @@ import BouquetModal from "@/components/BouquetModal";
 import Gallery from "@/components/Gallery";
 import { Bouquet } from "@/interfaces/Bouquet";
 import { changeAmount, createOrder, fetchBouquets } from "@/lib/api";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { addToCart, selectCart } from "@/lib/redux/cartSlice";
 import { dummyPickupOrder } from "@/shared/dummyData";
 import { useState } from "react";
 
@@ -14,6 +16,19 @@ interface Props {
 export default function Home({ bouquets }: Props) {
   const [selectedBouquet, setSelectedBouquet] = useState<Bouquet | null>(null);
   const [bouquetIsOpened, setBouquetIsOpened] = useState(false);
+  const cart = useAppSelector(selectCart);
+  const dispatch = useAppDispatch();
+
+  console.log(cart);
+
+  function handleAddToCartClick(bouquet: Bouquet) {
+    dispatch(
+      addToCart({
+        ...bouquet,
+        note: "with Love",
+      })
+    );
+  }
 
   async function handleFetchClick() {
     try {
@@ -65,16 +80,27 @@ export default function Home({ bouquets }: Props) {
             <button type="button" onClick={handleCreateOrderClick}>
               Create Order
             </button>
+            <button
+              type="button"
+              onClick={() => handleAddToCartClick(bouquets[0])}
+            >
+              Add to cart
+            </button>
           </div>
         </section>
       )}
 
-      <Gallery bouquets={bouquets} onClick={openBouquet} />
+      <Gallery
+        bouquets={bouquets}
+        onCardClick={openBouquet}
+        onAddToCartClick={handleAddToCartClick}
+      />
 
       <BouquetModal
         bouquet={selectedBouquet}
         isOpen={bouquetIsOpened}
         closeModal={() => setBouquetIsOpened(false)}
+        onAddToCartClick={handleAddToCartClick}
       />
     </main>
   );

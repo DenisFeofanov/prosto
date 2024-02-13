@@ -5,10 +5,15 @@ import Image from "next/image";
 
 interface Props {
   bouquets: Bouquet[];
-  onClick: (bouquet: Bouquet) => void;
+  onCardClick: (bouquet: Bouquet) => void;
+  onAddToCartClick: (bouquet: Bouquet) => void;
 }
 
-export default function Gallery({ bouquets, onClick }: Props) {
+export default function Gallery({
+  bouquets,
+  onCardClick,
+  onAddToCartClick,
+}: Props) {
   return (
     <ul
       className={`p-10 grid justify-center items-start grid-cols-[repeat(1,minmax(0,18.75rem))] sm:grid-cols-[repeat(2,minmax(0,18.75rem))] md:grid-cols-[repeat(3,minmax(0,18.75rem))] lg:grid-cols-[repeat(4,minmax(0,18.75rem))] lg:p-20 gap-10`}
@@ -17,7 +22,7 @@ export default function Gallery({ bouquets, onClick }: Props) {
         <li key={bouquet.id}>
           <button
             type="button"
-            onClick={() => onClick(bouquet)}
+            onClick={() => onCardClick(bouquet)}
             className="text-left rounded-xl group"
           >
             <Image
@@ -34,10 +39,7 @@ export default function Gallery({ bouquets, onClick }: Props) {
             </div>
           </button>
 
-          <Button
-            className="mt-4"
-            onClick={() => console.log("TODO: buy bouquet")}
-          >
+          <Button className="mt-4" onClick={() => onAddToCartClick(bouquet)}>
             Купить
           </Button>
         </li>

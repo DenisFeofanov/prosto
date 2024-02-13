@@ -1,5 +1,5 @@
 import { Bouquet } from "@/interfaces/Bouquet";
-import { OrderedItem } from "@/interfaces/Order";
+import { OrderedBouquet } from "@/interfaces/Order";
 import {
   AMOUNT,
   DESCRIPTION,
@@ -54,11 +54,12 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
   });
 }
 
-export function convertOrderToString(order: OrderedItem[]): string {
+export function convertOrderToString(order: OrderedBouquet[]): string {
   return order
     .reduce((acc, order) => {
       const size = order.size ? `размер ${order.size}, ` : "";
-      return `${acc}- ${order.bouquet}, ${order.amount} шт., ${size}цена ${order.price}р, открытка "${order.note}"\n`;
+      const note = order.note ? `открытка "${order.note}"` : "";
+      return `${acc}- ${order.name}, ${order.amount} шт., ${size}цена ${order.price}р, ${note}\n`;
     }, "")
     .trimEnd();
 }

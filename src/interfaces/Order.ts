@@ -1,14 +1,13 @@
-export interface OrderedItem {
-  bouquet: string;
-  amount: number;
+import { Bouquet } from "./Bouquet";
+
+export interface OrderedBouquet extends Bouquet {
   size?: string;
-  price: number;
-  note: string;
+  note?: string;
 }
 
 interface BaseOrder {
   total: number;
-  items: OrderedItem[];
+  items: OrderedBouquet[];
   clientName: string;
   clientPhone: string;
 }
