@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addToCart, selectCart } from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
 import { Button, InputNumber, Modal, Space, Typography } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import { useEffect, useRef, useState } from "react";
 import BouquetCarousel from "./BouquetCarousel";
 import SizeDropdown from "./SizeDropdown";
-import TextArea from "antd/es/input/TextArea";
 
 interface Props {
   bouquet: Bouquet | null;
@@ -73,7 +73,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
         <BouquetCarousel photos={bouquet.photos} />
 
         <div className="mt-4 lg:m-0">
-          <h2 className="text-2xl font-bold mb-4">{bouquet.name}</h2>
+          <Typography.Title level={2}>{bouquet.name}</Typography.Title>
           <p className="text-gray-600 mb-4 text-base">{bouquet.description}</p>
           <p className="text-lg font-bold mb-4">{formatPrice(bouquet.price)}</p>
 

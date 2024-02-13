@@ -24,7 +24,7 @@ export default function Home({ bouquets }: Props) {
       addToCart({
         ...bouquet,
         amountOrdered: 1,
-        note: "with Love",
+        size: "M",
       })
     );
   }
