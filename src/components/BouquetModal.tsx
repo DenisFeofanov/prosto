@@ -33,7 +33,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
 
   function handleAddToCartClick(bouquet: Bouquet) {
     setAmountOrdered(1);
-    setSize("S");
+    setSize(DEFAULT_SIZE);
     setNote("");
     dispatch(
       addToCart({
