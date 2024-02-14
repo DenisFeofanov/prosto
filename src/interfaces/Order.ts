@@ -1,9 +1,17 @@
 import { Bouquet } from "./Bouquet";
 
-export interface OrderedBouquet extends Bouquet {
-  size?: string;
+export interface OrderedBouquet {
+  data: Bouquet;
+  size: string;
   note?: string;
   amountOrdered: number;
+}
+
+export interface CartItem {
+  cartId: string;
+  data: Bouquet;
+  size: string;
+  note?: string;
 }
 
 interface BaseOrder {

@@ -36,7 +36,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
     setNote("");
     dispatch(
       addToCart({
-        ...bouquet,
+        data: bouquet,
         amountOrdered,
         size,
         note,

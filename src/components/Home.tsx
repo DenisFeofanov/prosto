@@ -22,7 +22,7 @@ export default function Home({ bouquets }: Props) {
   function handleAddToCartClick(bouquet: Bouquet) {
     dispatch(
       addToCart({
-        ...bouquet,
+        data: bouquet,
         amountOrdered: 1,
         size: "M",
       })

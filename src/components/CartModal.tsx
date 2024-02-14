@@ -1,7 +1,6 @@
-import { Bouquet } from "@/interfaces/Bouquet";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { changeAmount, selectCart } from "@/lib/redux/cartSlice";
-import { Divider, InputNumber, Modal, Typography } from "antd";
+import { selectCart } from "@/lib/redux/cartSlice";
+import { Divider, Modal, Typography } from "antd";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
@@ -23,14 +22,6 @@ export default function CartModal({ isOpen, closeModal }: Props) {
     }
   }, [isOpen]);
 
-  function handleChangeAmount(amount: number | null, bouquet: Bouquet): void {
-    if (amount === null) {
-      return;
-    }
-
-    dispatch(changeAmount({ ...bouquet, amountOrdered: amount }));
-  }
-
   return (
     <Modal
       open={isOpen}
@@ -46,30 +37,28 @@ export default function CartModal({ isOpen, closeModal }: Props) {
 
       <Divider />
       <section className="flex flex-col gap-8 items-start">
-        {cart.bouquets.map(bouquet => (
-          <div key={bouquet.id}>
-            <div className="flex gap-8 items-center">
-              <Image
-                className="rounded-md"
-                src={bouquet.photos[0]}
-                width={100}
-                height={80}
-                alt="Превью букета"
-              />
+        {cart.bouquets.map(cartItem => {
+          const bouquet = cartItem.data;
+          return (
+            <div key={cartItem.cartId}>
+              <div className="flex gap-8 items-center">
+                <Image
+                  className="rounded-md"
+                  src={bouquet.photos[0]}
+                  width={100}
+                  height={80}
+                  alt="Превью букета"
+                />
 
-              <Typography.Title level={4}>{bouquet.name}</Typography.Title>
+                <Typography.Title level={4}>{bouquet.name}</Typography.Title>
 
-              <InputNumber
-                min={1}
-                max={bouquet.amountAvailable}
-                keyboard={true}
-                value={bouquet.amountOrdered}
-                onChange={value => handleChangeAmount(value, bouquet)}
-                size="large"
-              />
+                <p>price {bouquet.price}</p>
+                <p>size {cartItem.size}</p>
+                <p>note {cartItem.note || "none"}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </section>
       <Divider />
     </Modal>

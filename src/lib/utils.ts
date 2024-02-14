@@ -60,7 +60,7 @@ export function convertOrderToString(order: OrderedBouquet[]): string {
     .reduce((acc, order) => {
       const size = order.size ? `размер ${order.size}, ` : "";
       const note = order.note ? `открытка "${order.note}"` : "";
-      return `${acc}- ${order.name}, ${order.amountOrdered} шт., ${size}цена ${order.price}р, ${note}\n`;
+      return `${acc}- ${order.data.name}, ${order.amountOrdered} шт., ${size}цена ${order.data.price}р, ${note}\n`;
     }, "")
     .trimEnd();
 }
@@ -78,13 +78,10 @@ export function calculateRemainingAmount(
   }
 
   const sameIdBouquets = cart.bouquets.filter(
-    orderedBouquet => orderedBouquet.id === bouquet.id
+    orderedBouquet => orderedBouquet.data.id === bouquet.id
   );
 
-  const alreadyOrderedAmount = sameIdBouquets.reduce(
-    (acc, orderedBouquet) => acc + orderedBouquet.amountOrdered,
-    0
-  );
+  const alreadyOrderedAmount = sameIdBouquets.length;
 
   return bouquet.amountAvailable - alreadyOrderedAmount;
 }
