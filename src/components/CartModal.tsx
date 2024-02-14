@@ -1,9 +1,8 @@
 import CartItem from "@/components/CartItem";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { clearCart, selectCart } from "@/lib/redux/cartSlice";
-import { BUTTON_SIZE } from "@/shared/constants";
 import { Button, Divider, Modal, Typography } from "antd";
-import { MouseEventHandler, useEffect, useRef } from "react";
+import { MouseEventHandler } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -38,7 +37,7 @@ export default function CartModal({ isOpen, closeModal }: Props) {
       <Typography.Title level={2}>Корзина</Typography.Title>
 
       <Divider />
-      <ul>
+      <ul className="flex flex-col items-start gap-10">
         {cart.bouquets.map(cartItem => {
           return (
             <li key={cartItem.cartId}>
@@ -48,8 +47,9 @@ export default function CartModal({ isOpen, closeModal }: Props) {
         })}
       </ul>
       <Divider />
-      <div className="flex justify-between">
-        <Button danger onClick={handleClearCart}>
+
+      <div className="flex justify-between flex-wrap gap-4">
+        <Button danger onClick={handleClearCart} size="middle">
           Очистить корзину
         </Button>
 
@@ -57,7 +57,7 @@ export default function CartModal({ isOpen, closeModal }: Props) {
           className="bg-[#00aa00] hover:bg-[#00c800]"
           type="primary"
           onClick={handleSubmit}
-          size={BUTTON_SIZE}
+          size="middle"
         >
           Оформить заказ
         </Button>

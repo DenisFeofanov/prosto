@@ -6,7 +6,7 @@ import useDebouncedFunction, {
 } from "@/lib/hooks";
 import { selectCart, updateCartItem } from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
-import { DEFAULT_SIZE } from "@/shared/constants";
+import { DEFAULT_SIZE, IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
 import { Typography } from "antd";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
@@ -37,33 +37,41 @@ export default function CartItem({ cartItem }: Props) {
 
   const bouquet = cartItem.data;
   return (
-    <div className="flex gap-8 items-center">
-      <Image
-        className="rounded-md"
-        src={bouquet.photos[0]}
-        width={100}
-        height={80}
-        alt="Превью букета"
-      />
-
-      <Typography.Title
-        level={4}
-        style={{
-          margin: 0,
-        }}
-      >
-        {bouquet.name}
-      </Typography.Title>
-
-      <Typography.Text>{formatPrice(bouquet.price)}</Typography.Text>
-
-      {bouquet.hasSize && (
-        <SizeDropdown
-          disabled={calculateRemainingAmount(bouquet, cart) <= 0}
-          selectedSize={size}
-          onSelect={handleSizeSelect}
+    <div className="flex flex-col gap-4 items-center">
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4">
+        <Image
+          className="rounded-md"
+          src={bouquet.photos[0]}
+          alt="Превью букета"
+          // not wider than 500px
+          sizes="400px"
+          width={IMAGE_WIDTH}
+          height={IMAGE_HEIGHT}
         />
-      )}
+
+        <div className="flex flex-col items-start gap-3">
+          <Typography.Title
+            level={4}
+            style={{
+              margin: 0,
+            }}
+          >
+            {bouquet.name}
+          </Typography.Title>
+
+          {bouquet.hasSize && (
+            <SizeDropdown
+              disabled={calculateRemainingAmount(bouquet, cart) <= 0}
+              selectedSize={size}
+              onSelect={handleSizeSelect}
+            />
+          )}
+
+          <Typography.Text className="block">
+            {formatPrice(bouquet.price)}
+          </Typography.Text>
+        </div>
+      </div>
 
       <NoteInput note={note} onChange={handleNoteChange} />
     </div>
