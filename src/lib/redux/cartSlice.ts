@@ -1,5 +1,5 @@
 import { CartItem, OrderedBouquet } from "@/interfaces/Order";
-import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
 export interface CartState {
@@ -33,10 +33,17 @@ const cartSlice = createSlice({
         };
       },
     },
+    updateCartItem(state, action: PayloadAction<CartItem>) {
+      const { cartId, note } = action.payload;
+      const index = state.bouquets.findIndex(item => item.cartId === cartId);
+      if (index !== -1) {
+        state.bouquets[index].note = note;
+      }
+    },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, updateCartItem } = cartSlice.actions;
 export const selectCart = (state: RootState) => state.cart;
 export const selectBouquets = (state: RootState) => state.cart.bouquets;
 export default cartSlice.reducer;

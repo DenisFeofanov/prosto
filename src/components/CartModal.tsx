@@ -1,8 +1,8 @@
+import CartItem from "@/components/CartItem";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { selectCart } from "@/lib/redux/cartSlice";
-import { Divider, Modal, Typography } from "antd";
-import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { Button, Divider, Modal, Typography } from "antd";
+import { MouseEventHandler, useEffect, useRef } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -22,6 +22,10 @@ export default function CartModal({ isOpen, closeModal }: Props) {
     }
   }, [isOpen]);
 
+  const handleSubmit: MouseEventHandler<HTMLElement> = event => {
+    console.log("TODO: create new order");
+  };
+
   return (
     <Modal
       open={isOpen}
@@ -36,31 +40,26 @@ export default function CartModal({ isOpen, closeModal }: Props) {
       <Typography.Title level={2}>Корзина</Typography.Title>
 
       <Divider />
-      <section className="flex flex-col gap-8 items-start">
+      <ul>
         {cart.bouquets.map(cartItem => {
-          const bouquet = cartItem.data;
           return (
-            <div key={cartItem.cartId}>
-              <div className="flex gap-8 items-center">
-                <Image
-                  className="rounded-md"
-                  src={bouquet.photos[0]}
-                  width={100}
-                  height={80}
-                  alt="Превью букета"
-                />
-
-                <Typography.Title level={4}>{bouquet.name}</Typography.Title>
-
-                <p>price {bouquet.price}</p>
-                <p>size {cartItem.size}</p>
-                <p>note {cartItem.note || "none"}</p>
-              </div>
-            </div>
+            <li key={cartItem.cartId}>
+              <CartItem cartItem={cartItem} />
+            </li>
           );
         })}
-      </section>
+      </ul>
       <Divider />
+
+      <div className="text-right">
+        <Button
+          className="bg-[#00aa00] hover:bg-[#00c800]"
+          type="primary"
+          onClick={handleSubmit}
+        >
+          Оформить заказ
+        </Button>
+      </div>
     </Modal>
   );
 }
