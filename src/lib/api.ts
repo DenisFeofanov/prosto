@@ -78,6 +78,7 @@ export async function fetchBouquets(): Promise<Bouquet[]> {
       throw new Error(`${error.status} ${error.message}`);
     }
 
+    console.error(error);
     throw new Error(
       "An unknown error occurred while querying the Notion database"
     );
