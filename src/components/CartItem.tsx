@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default function CartItem({ cartItem }: Props) {
-  const [note, setNote] = useState<string>("");
+  const [note, setNote] = useState<string>(cartItem.note || "");
   const [size, setSize] = useState<Size>(DEFAULT_SIZE);
   const dispatch = useAppDispatch();
   const debouncedDispatch = useDebouncedFunction(dispatch, 1000);
