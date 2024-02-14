@@ -8,9 +8,9 @@ import { selectCart, updateCartItem } from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
 import { DEFAULT_SIZE } from "@/shared/constants";
 import { Typography } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import NoteInput from "./NoteInput";
 import SizeDropdown from "./SizeDropdown";
 
 interface Props {
@@ -65,12 +65,7 @@ export default function CartItem({ cartItem }: Props) {
         />
       )}
 
-      <TextArea
-        value={note}
-        onChange={handleNoteChange}
-        placeholder="Открытка к букету"
-        autoSize={{ minRows: 3, maxRows: 10 }}
-      />
+      <NoteInput note={note} onChange={handleNoteChange} />
     </div>
   );
 }
