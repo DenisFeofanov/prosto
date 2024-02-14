@@ -1,6 +1,6 @@
 import CartItem from "@/components/CartItem";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { selectCart } from "@/lib/redux/cartSlice";
+import { clearCart, selectCart } from "@/lib/redux/cartSlice";
 import { BUTTON_SIZE } from "@/shared/constants";
 import { Button, Divider, Modal, Typography } from "antd";
 import { MouseEventHandler, useEffect, useRef } from "react";
@@ -11,20 +11,17 @@ interface Props {
 }
 
 export default function CartModal({ isOpen, closeModal }: Props) {
-  const modalRef = useRef<HTMLDialogElement | null>(null);
   const dispatch = useAppDispatch();
   const cart = useAppSelector(selectCart);
 
-  useEffect(() => {
-    if (isOpen) {
-      modalRef.current?.showModal();
-    } else {
-      modalRef.current?.close();
-    }
-  }, [isOpen]);
-
   const handleSubmit: MouseEventHandler<HTMLElement> = event => {
     console.log("TODO: create new order");
+  };
+
+  const handleClearCart = () => {
+    dispatch(clearCart());
+    closeModal();
+    Modal.destroyAll();
   };
 
   return (
@@ -51,8 +48,11 @@ export default function CartModal({ isOpen, closeModal }: Props) {
         })}
       </ul>
       <Divider />
+      <div className="flex justify-between">
+        <Button danger onClick={handleClearCart}>
+          Очистить корзину
+        </Button>
 
-      <div className="text-right">
         <Button
           className="bg-[#00aa00] hover:bg-[#00c800]"
           type="primary"

@@ -33,6 +33,9 @@ const cartSlice = createSlice({
         };
       },
     },
+    clearCart(state) {
+      state.bouquets = [];
+    },
     updateCartItem(state, action: PayloadAction<CartItem>) {
       const { cartId, note } = action.payload;
       const index = state.bouquets.findIndex(item => item.cartId === cartId);
@@ -43,7 +46,7 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, updateCartItem } = cartSlice.actions;
+export const { addToCart, updateCartItem, clearCart } = cartSlice.actions;
 export const selectCart = (state: RootState) => state.cart;
 export const selectBouquets = (state: RootState) => state.cart.bouquets;
 export default cartSlice.reducer;
