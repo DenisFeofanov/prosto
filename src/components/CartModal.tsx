@@ -38,7 +38,9 @@ export default function CartModal({ isOpen, closeModal }: Props) {
       onCancel={closeModal}
       className="w-auto max-w-[30rem] lg:min-w-[80vw]"
       footer={null}
-      centered
+      style={{
+        top: "2rem",
+      }}
     >
       <Typography.Title level={2}>Корзина</Typography.Title>
 
