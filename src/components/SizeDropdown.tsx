@@ -1,6 +1,6 @@
 import { Size } from "@/interfaces/Bouquet";
 import { isSize } from "@/lib/utils";
-import { SIZES } from "@/shared/constants";
+import { BUTTON_SIZE, SIZES } from "@/shared/constants";
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Dropdown, MenuProps, Space } from "antd";
 
@@ -37,7 +37,7 @@ export default function SizeDropdown({
 
   return (
     <Dropdown menu={menuProps} disabled={disabled}>
-      <Button size="large">
+      <Button size={BUTTON_SIZE}>
         <Space>
           {`Размер ${selectedSize}`}
           <DownOutlined />

@@ -1,6 +1,7 @@
 import CartItem from "@/components/CartItem";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { selectCart } from "@/lib/redux/cartSlice";
+import { BUTTON_SIZE } from "@/shared/constants";
 import { Button, Divider, Modal, Typography } from "antd";
 import { MouseEventHandler, useEffect, useRef } from "react";
 
@@ -56,6 +57,7 @@ export default function CartModal({ isOpen, closeModal }: Props) {
           className="bg-[#00aa00] hover:bg-[#00c800]"
           type="primary"
           onClick={handleSubmit}
+          size={BUTTON_SIZE}
         >
           Оформить заказ
         </Button>

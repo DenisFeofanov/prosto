@@ -2,7 +2,7 @@ import { Bouquet, Size } from "@/interfaces/Bouquet";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addToCart, selectCart } from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
-import { DEFAULT_SIZE } from "@/shared/constants";
+import { BUTTON_SIZE, DEFAULT_SIZE } from "@/shared/constants";
 import { Button, InputNumber, Modal, Space, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useRef, useState } from "react";
@@ -83,7 +83,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
                 keyboard={true}
                 value={amountOrdered}
                 onChange={handleChangeAmount}
-                size="large"
+                size={BUTTON_SIZE}
                 disabled={isDisabled}
               />
 
@@ -115,7 +115,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
             <Button
               className="mt-4"
               onClick={() => handleAddToCartClick(bouquet)}
-              size="large"
+              size={BUTTON_SIZE}
               type="primary"
               disabled={isDisabled}
             >
