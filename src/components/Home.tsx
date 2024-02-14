@@ -104,6 +104,7 @@ export default function Home({ bouquets }: Props) {
       </ul>
 
       <BouquetModal
+        key={selectedBouquet?.id}
         bouquet={selectedBouquet}
         isOpen={bouquetIsOpened}
         closeModal={() => setBouquetIsOpened(false)}
