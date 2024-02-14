@@ -1,11 +1,17 @@
+import { Size } from "@/interfaces/Bouquet";
 import { CartItem } from "@/interfaces/Order";
-import useDebouncedFunction, { useAppDispatch } from "@/lib/hooks";
-import { updateCartItem } from "@/lib/redux/cartSlice";
-import { formatPrice } from "@/lib/utils";
+import useDebouncedFunction, {
+  useAppDispatch,
+  useAppSelector,
+} from "@/lib/hooks";
+import { selectCart, updateCartItem } from "@/lib/redux/cartSlice";
+import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
+import { DEFAULT_SIZE } from "@/shared/constants";
 import { Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import SizeDropdown from "./SizeDropdown";
 
 interface Props {
   cartItem: CartItem;
@@ -13,13 +19,20 @@ interface Props {
 
 export default function CartItem({ cartItem }: Props) {
   const [note, setNote] = useState<string>("");
+  const [size, setSize] = useState<Size>(DEFAULT_SIZE);
   const dispatch = useAppDispatch();
   const debouncedDispatch = useDebouncedFunction(dispatch, 1000);
+  const cart = useAppSelector(selectCart);
 
   function handleNoteChange(event: ChangeEvent<HTMLTextAreaElement>) {
     const newNote = event.target.value;
     setNote(newNote);
     debouncedDispatch(updateCartItem({ ...cartItem, note }));
+  }
+
+  function handleSizeSelect(size: Size) {
+    setSize(size);
+    debouncedDispatch(updateCartItem({ ...cartItem, size }));
   }
 
   const bouquet = cartItem.data;
@@ -44,7 +57,13 @@ export default function CartItem({ cartItem }: Props) {
 
       <Typography.Text>{formatPrice(bouquet.price)}</Typography.Text>
 
-      <Typography.Text>Размер {cartItem.size}</Typography.Text>
+      {bouquet.hasSize && (
+        <SizeDropdown
+          disabled={calculateRemainingAmount(bouquet, cart) <= 0}
+          selectedSize={size}
+          onSelect={handleSizeSelect}
+        />
+      )}
 
       <TextArea
         value={note}

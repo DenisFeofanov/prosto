@@ -2,6 +2,7 @@ import { Bouquet, Size } from "@/interfaces/Bouquet";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addToCart, selectCart } from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
+import { DEFAULT_SIZE } from "@/shared/constants";
 import { Button, InputNumber, Modal, Space, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useRef, useState } from "react";
@@ -16,7 +17,7 @@ interface Props {
 
 export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
   const modalRef = useRef<HTMLDialogElement | null>(null);
-  const [size, setSize] = useState<Size>("S");
+  const [size, setSize] = useState<Size>(DEFAULT_SIZE);
   const [amountOrdered, setAmountOrdered] = useState(1);
   const [note, setNote] = useState("");
   const dispatch = useAppDispatch();
@@ -42,11 +43,6 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
         note,
       })
     );
-  }
-
-  function handleSizeSelect({ selectedKeys }: { selectedKeys: string[] }) {
-    // forgive me. Dropdown just can't accept Size[] for some reason
-    setSize(selectedKeys[0] as Size);
   }
 
   function handleChangeAmount(value: number | null) {
@@ -95,7 +91,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
                 <SizeDropdown
                   disabled={isDisabled}
                   selectedSize={size}
-                  onSelect={handleSizeSelect}
+                  onSelect={setSize}
                 />
               )}
             </Space>

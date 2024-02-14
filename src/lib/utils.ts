@@ -1,4 +1,4 @@
-import { Bouquet } from "@/interfaces/Bouquet";
+import { Bouquet, Size } from "@/interfaces/Bouquet";
 import { OrderedBouquet } from "@/interfaces/Order";
 import {
   AMOUNT,
@@ -84,4 +84,8 @@ export function calculateRemainingAmount(
   const alreadyOrderedAmount = sameIdBouquets.length;
 
   return bouquet.amountAvailable - alreadyOrderedAmount;
+}
+
+export function isSize(value: string): value is Size {
+  return value === "S" || value === "M" || value === "L";
 }
