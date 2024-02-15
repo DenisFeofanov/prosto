@@ -25,18 +25,19 @@ const onFinishFailed = (errorInfo: any) => {
 };
 
 const validatePhoneNumber = (
-  number: Phone
+  phone: Phone
 ): {
   validateStatus: ValidateStatus;
   errorMsg: string | null;
 } => {
-  if (number === "") {
+  const phoneRegex = new RegExp(/^(8|\+7)\d{3}\d{3}\d{2}\d{2}$/);
+  if (phone === "") {
     return {
       validateStatus: "error",
       errorMsg: "Поле обязательно для заполнения",
     };
   }
-  if (number === "89999999999") {
+  if (phoneRegex.test(phone)) {
     return {
       validateStatus: "success",
       errorMsg: null,
@@ -54,7 +55,7 @@ export default function CartForm({ onBackClick }: Props) {
     validateStatus?: ValidateStatus;
     errorMsg?: string | null;
   }>({ value: "" });
-  const setPhoneDebounced = useDebouncedFunction(setPhone, 1000);
+  const setPhoneDebounced = useDebouncedFunction(setPhone, 500);
 
   const onPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -66,6 +67,7 @@ export default function CartForm({ onBackClick }: Props) {
       return;
     }
 
+    setPhone({ ...phone, validateStatus: "validating", errorMsg: null });
     setPhoneDebounced({
       ...validatePhoneNumber(value),
       value,
@@ -91,6 +93,7 @@ export default function CartForm({ onBackClick }: Props) {
           label="ФИО"
           name="username"
           rules={[{ required: true, message: "Пожалуйста введите ФИО" }]}
+          hasFeedback
         >
           <Input />
         </Form.Item>
@@ -98,9 +101,10 @@ export default function CartForm({ onBackClick }: Props) {
         <Form.Item<FieldType>
           label="Телефон"
           name="phone"
+          hasFeedback
           validateStatus={phone.validateStatus}
           help={phone.errorMsg}
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: "" }]}
         >
           <Input value={phone.value} onChange={onPhoneChange} />
         </Form.Item>
