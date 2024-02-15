@@ -16,20 +16,11 @@ interface Props {
 }
 
 export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
-  const modalRef = useRef<HTMLDialogElement | null>(null);
   const [size, setSize] = useState<Size>(DEFAULT_SIZE);
   const [amountOrdered, setAmountOrdered] = useState(1);
   const [note, setNote] = useState("");
   const dispatch = useAppDispatch();
   const cart = useAppSelector(selectCart);
-
-  useEffect(() => {
-    if (isOpen) {
-      modalRef.current?.showModal();
-    } else {
-      modalRef.current?.close();
-    }
-  }, [isOpen]);
 
   function handleAddToCartClick(bouquet: Bouquet) {
     const orderedBouquets = Array.from({ length: amountOrdered }, () => ({
