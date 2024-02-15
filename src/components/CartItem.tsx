@@ -37,20 +37,21 @@ export default function CartItem({ cartItem }: Props) {
 
   const bouquet = cartItem.data;
   return (
-    <div className="flex flex-col gap-4 items-center">
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4">
-        <Image
-          className="rounded-md"
-          src={bouquet.photos[0]}
-          alt="Превью букета"
-          // not wider than 500px
-          sizes="400px"
-          width={IMAGE_WIDTH}
-          height={IMAGE_HEIGHT}
-        />
+    <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)]">
+      <Image
+        className="rounded-md"
+        src={bouquet.photos[0]}
+        alt="Превью букета"
+        // not wider than 500px
+        sizes="400px"
+        width={IMAGE_WIDTH}
+        height={IMAGE_HEIGHT}
+      />
 
-        <div className="flex flex-col items-start gap-3">
+      <div className="flex flex-col items-start justify-between gap-3">
+        <div>
           <Typography.Title
+            className="whitespace-nowrap"
             level={4}
             style={{
               margin: 0,
@@ -71,9 +72,9 @@ export default function CartItem({ cartItem }: Props) {
             {formatPrice(bouquet.price)}
           </Typography.Text>
         </div>
-      </div>
 
-      <NoteInput note={note} onChange={handleNoteChange} />
+        <NoteInput note={note} onChange={handleNoteChange} />
+      </div>
     </div>
   );
 }

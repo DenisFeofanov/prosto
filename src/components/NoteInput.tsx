@@ -12,7 +12,7 @@ export default function NoteInput({ note, onChange }: Props) {
       value={note}
       onChange={onChange}
       placeholder="Открытка к букету"
-      autoSize={{ minRows: 3, maxRows: 10 }}
+      autoSize={{ minRows: 2, maxRows: 10 }}
       allowClear
     />
   );

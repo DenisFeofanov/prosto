@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { clearCart, selectCart } from "@/lib/redux/cartSlice";
 import { Button, Divider, Modal, Typography } from "antd";
 import { MouseEventHandler } from "react";
+import ClearButton from "./Cart/ClearButton";
 
 interface Props {
   isOpen: boolean;
@@ -28,13 +29,19 @@ export default function CartModal({ isOpen, closeModal }: Props) {
       open={isOpen}
       onOk={closeModal}
       onCancel={closeModal}
-      className="w-auto max-w-[30rem] lg:min-w-[80vw]"
+      className="max-w-[30rem] lg:max-w-[50rem]"
       footer={null}
       style={{
         top: "2rem",
       }}
     >
-      <Typography.Title level={2}>Корзина</Typography.Title>
+      <div className="flex justify-between items-center flex-wrap gap-2 mt-8 lg:mt-0">
+        <Typography.Title className="mb-2" level={2}>
+          Корзина
+        </Typography.Title>
+
+        <ClearButton className="lg:hidden" onClick={handleClearCart} />
+      </div>
 
       <Divider />
       <ul className="flex flex-col items-start gap-10">
@@ -48,13 +55,14 @@ export default function CartModal({ isOpen, closeModal }: Props) {
       </ul>
       <Divider />
 
-      <div className="flex justify-between flex-wrap gap-4">
-        <Button danger onClick={handleClearCart} size="middle">
-          Очистить корзину
-        </Button>
+      <div className="flex justify-between flex-wrap gap-6">
+        <ClearButton
+          className="hidden lg:inline-block"
+          onClick={handleClearCart}
+        />
 
         <Button
-          className="bg-[#00aa00] hover:bg-[#00c800]"
+          className="bg-[#00aa00] hover:bg-[#00c800] block w-full lg:inline-block lg:w-auto"
           type="primary"
           onClick={handleSubmit}
           size="middle"
