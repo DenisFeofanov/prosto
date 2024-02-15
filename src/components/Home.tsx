@@ -3,8 +3,6 @@
 import BouquetModal from "@/components/BouquetModal";
 import { Bouquet } from "@/interfaces/Order";
 import { changeAmount, createOrder, fetchBouquets } from "@/lib/api";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { addToCart, selectCart } from "@/lib/redux/cartSlice";
 import { dummyPickupOrder } from "@/shared/dummyData";
 import { useState } from "react";
 import Card from "./Card";
@@ -16,18 +14,6 @@ interface Props {
 export default function Home({ bouquets }: Props) {
   const [selectedBouquet, setSelectedBouquet] = useState<Bouquet | null>(null);
   const [bouquetIsOpened, setBouquetIsOpened] = useState(false);
-  const cart = useAppSelector(selectCart);
-  const dispatch = useAppDispatch();
-
-  function handleAddToCartClick(bouquet: Bouquet) {
-    dispatch(
-      addToCart({
-        data: bouquet,
-        amountOrdered: 1,
-        size: "M",
-      })
-    );
-  }
 
   async function handleFetchClick() {
     try {
@@ -79,12 +65,6 @@ export default function Home({ bouquets }: Props) {
             <button type="button" onClick={handleCreateOrderClick}>
               Create Order
             </button>
-            <button
-              type="button"
-              onClick={() => handleAddToCartClick(bouquets[0])}
-            >
-              Add to cart
-            </button>
           </div>
         </section>
       )}
@@ -97,7 +77,6 @@ export default function Home({ bouquets }: Props) {
               bouquet={bouquet}
               key={bouquet.id}
               onCardClick={openBouquet}
-              onAddToCartClick={handleAddToCartClick}
             />
           </li>
         ))}

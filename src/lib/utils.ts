@@ -60,7 +60,8 @@ export function convertOrderToString(order: OrderedBouquet[]): string {
     .reduce((acc, order) => {
       const size = order.size ? `размер ${order.size}, ` : "";
       const note = order.note ? `открытка "${order.note}"` : "";
-      return `${acc}- ${order.data.name}, ${order.amountOrdered} шт., ${size}цена ${order.data.price}р, ${note}\n`;
+      return "";
+      // return `${acc}- ${order.data.name}, ${order.amountOrdered} шт., ${size}цена ${order.data.price}р, ${note}\n`;
     }, "")
     .trimEnd();
 }

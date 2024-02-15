@@ -15,21 +15,18 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: {
-      reducer(
-        state,
-        action: PayloadAction<OrderedBouquet & { cartId: string }>
-      ) {
-        const { amountOrdered, ...cartItem } = action.payload;
-        for (let i = 0; i < action.payload.amountOrdered; i++) {
-          state.bouquets.push(cartItem);
-        }
+      reducer(state, action: PayloadAction<CartItem[]>) {
+        state.bouquets = [...state.bouquets, ...action.payload];
       },
-      prepare(orderedBouquet: OrderedBouquet) {
-        return {
-          payload: {
+      prepare(orderedBouquet: OrderedBouquet[]) {
+        const bouquetsWithId = orderedBouquet.map(orderedBouquet => {
+          return {
             ...orderedBouquet,
             cartId: nanoid(),
-          },
+          };
+        });
+        return {
+          payload: bouquetsWithId,
         };
       },
     },

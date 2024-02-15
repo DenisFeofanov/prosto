@@ -16,7 +16,6 @@ export interface OrderedBouquet {
   data: Bouquet;
   size: string;
   note?: string;
-  amountOrdered: number;
 }
 
 export interface CartItem {

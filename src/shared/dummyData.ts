@@ -14,7 +14,6 @@ export const dummyOrderedItems: OrderedBouquet[] = [
     },
     size: "M",
     note: "with Love",
-    amountOrdered: 1,
   },
   {
     data: {
@@ -28,7 +27,6 @@ export const dummyOrderedItems: OrderedBouquet[] = [
     },
     size: "M",
     note: "with Love",
-    amountOrdered: 1,
   },
 ];
 
