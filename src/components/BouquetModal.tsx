@@ -1,6 +1,6 @@
 import { Bouquet, Size } from "@/interfaces/Order";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { addToCart, selectCart } from "@/lib/redux/cartSlice";
+import { addToCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
 import { DEFAULT_SIZE } from "@/shared/constants";
 import { Button, InputNumber, Modal, Space, Typography } from "antd";
@@ -28,11 +28,14 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
       size,
       note,
     }));
+
     setAmountOrdered(1);
     setSize(DEFAULT_SIZE);
     setNote("");
 
     dispatch(addToCart(orderedBouquets));
+    closeModal();
+    dispatch(toggleCart());
   }
 
   function handleChangeAmount(value: number | null) {
