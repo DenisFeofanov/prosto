@@ -3,17 +3,19 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { clearCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
 import { createModalShowFunc } from "@/lib/utils";
 import { Button, Divider, Modal, Typography } from "antd";
-import { MouseEventHandler } from "react";
+import { MouseEvent, MouseEventHandler, useState } from "react";
 import ClearButton from "./ClearButton";
+import Form from "./CartForm";
 
 export default function CartModal() {
   const dispatch = useAppDispatch();
   const cartIsOpen = useAppSelector(state => state.cart.isOpen);
   const cart = useAppSelector(selectCart);
   const showModal = createModalShowFunc();
+  const [isCartComplete, setIsCartComplete] = useState(true);
 
   const handleSubmit: MouseEventHandler<HTMLElement> = event => {
-    console.log("TODO: create new order");
+    setIsCartComplete(true);
   };
 
   function handleToggleCart() {
@@ -38,6 +40,10 @@ export default function CartModal() {
     handleToggleCart();
   }
 
+  function handleBackClick(event: MouseEvent<HTMLButtonElement>): void {
+    setIsCartComplete(false);
+  }
+
   return (
     <Modal
       open={cartIsOpen}
@@ -49,41 +55,47 @@ export default function CartModal() {
         top: "2rem",
       }}
     >
-      <div className="flex justify-between items-center flex-wrap gap-2 mt-8 lg:mt-0">
-        <Typography.Title className="mb-2" level={2}>
-          Корзина
-        </Typography.Title>
+      {isCartComplete ? (
+        <Form onBackClick={handleBackClick} />
+      ) : (
+        <section>
+          <div className="flex justify-between items-center flex-wrap gap-2 mt-8 lg:mt-0">
+            <Typography.Title className="mb-2" level={2}>
+              Корзина
+            </Typography.Title>
 
-        <ClearButton className="lg:hidden" onClick={handleClearCart} />
-      </div>
+            <ClearButton className="lg:hidden" onClick={handleClearCart} />
+          </div>
 
-      <Divider />
-      <ul className="flex flex-col items-start gap-10">
-        {cart.bouquets.map(cartItem => {
-          return (
-            <li key={cartItem.cartId}>
-              <CartItem cartItem={cartItem} />
-            </li>
-          );
-        })}
-      </ul>
-      <Divider />
+          <Divider />
+          <ul className="flex flex-col items-start gap-10">
+            {cart.bouquets.map(cartItem => {
+              return (
+                <li key={cartItem.cartId}>
+                  <CartItem cartItem={cartItem} />
+                </li>
+              );
+            })}
+          </ul>
+          <Divider />
 
-      <div className="flex justify-between flex-wrap gap-6">
-        <ClearButton
-          className="hidden lg:inline-block"
-          onClick={handleClearCart}
-        />
+          <div className="flex justify-between flex-wrap gap-6">
+            <ClearButton
+              className="hidden lg:inline-block"
+              onClick={handleClearCart}
+            />
 
-        <Button
-          className="bg-[#00aa00] hover:bg-[#00c800] block w-full lg:inline-block lg:w-auto"
-          type="primary"
-          onClick={handleSubmit}
-          size="middle"
-        >
-          Оформить заказ
-        </Button>
-      </div>
+            <Button
+              className="block w-full lg:inline-block lg:w-auto"
+              type="primary"
+              onClick={handleSubmit}
+              size="middle"
+            >
+              Далее
+            </Button>
+          </div>
+        </section>
+      )}
     </Modal>
   );
 }
