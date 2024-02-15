@@ -9,9 +9,13 @@ import {
   selectCart,
   updateCartItem,
 } from "@/lib/redux/cartSlice";
-import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
+import {
+  calculateRemainingAmount,
+  createModalShowFunc,
+  formatPrice,
+} from "@/lib/utils";
 import { DEFAULT_SIZE, IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
-import { Button, Typography } from "antd";
+import { Button, Modal, Typography } from "antd";
 import Image from "next/image";
 import { ChangeEvent, MouseEvent, useState } from "react";
 import NoteInput from "../NoteInput";
@@ -28,6 +32,7 @@ export default function CartItem({ cartItem }: Props) {
   const dispatch = useAppDispatch();
   const debouncedDispatch = useDebouncedFunction(dispatch, 1000);
   const cart = useAppSelector(selectCart);
+  const showModal = createModalShowFunc();
 
   function handleNoteChange(event: ChangeEvent<HTMLTextAreaElement>) {
     const newNote = event.target.value;
@@ -43,7 +48,15 @@ export default function CartItem({ cartItem }: Props) {
   const bouquet = cartItem.data;
 
   function handleRemoveClick(event: MouseEvent<HTMLElement>): void {
-    dispatch(removeCartItem(cartItem));
+    showModal({
+      maskClosable: true,
+      title: "Удалить товар из корзины?",
+      okText: "Да",
+      cancelText: "Нет",
+      onOk() {
+        dispatch(removeCartItem(cartItem));
+      },
+    });
   }
 
   return (

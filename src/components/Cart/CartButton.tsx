@@ -2,6 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { selectCart, toggleCart } from "@/lib/redux/cartSlice";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 import { FloatButton } from "antd";
 
 export default function CartButton() {
@@ -14,6 +15,7 @@ export default function CartButton() {
 
   return (
     <FloatButton
+      icon={<ShoppingCartOutlined />}
       badge={{ count: cart.bouquets.length }}
       onClick={handleClick}
       tooltip="Корзина"

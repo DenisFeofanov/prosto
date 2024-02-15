@@ -1,6 +1,7 @@
 import CartItem from "@/components/Cart/CartItem";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { clearCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
+import { createModalShowFunc } from "@/lib/utils";
 import { Button, Divider, Modal, Typography } from "antd";
 import { MouseEventHandler } from "react";
 import ClearButton from "./ClearButton";
@@ -9,6 +10,7 @@ export default function CartModal() {
   const dispatch = useAppDispatch();
   const cartIsOpen = useAppSelector(state => state.cart.isOpen);
   const cart = useAppSelector(selectCart);
+  const showModal = createModalShowFunc();
 
   const handleSubmit: MouseEventHandler<HTMLElement> = event => {
     console.log("TODO: create new order");
@@ -19,9 +21,17 @@ export default function CartModal() {
   }
 
   const handleClearCart = () => {
-    dispatch(clearCart());
-    handleToggleCart();
-    Modal.destroyAll();
+    showModal({
+      maskClosable: true,
+      title: "Удалить все товары в корзине?",
+      okText: "Да",
+      cancelText: "Нет",
+      onOk() {
+        dispatch(clearCart());
+        handleToggleCart();
+        Modal.destroyAll();
+      },
+    });
   };
 
   if (cartIsOpen && cart.bouquets.length <= 0) {

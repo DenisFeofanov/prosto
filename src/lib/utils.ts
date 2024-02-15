@@ -11,6 +11,8 @@ import {
 import { isFullPage } from "@notionhq/client";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 import { CartState } from "./redux/cartSlice";
+import { Modal } from "antd";
+import { ModalOptions } from "@/interfaces/Modal";
 
 /**
  * Parses the response from the API into an array of Bouquet objects
@@ -89,4 +91,25 @@ export function calculateRemainingAmount(
 
 export function isSize(value: string): value is Size {
   return value === "S" || value === "M" || value === "L";
+}
+
+export function createModalShowFunc() {
+  let modal: any = null;
+
+  return (options: ModalOptions) => {
+    if (modal !== null) {
+      return;
+    }
+
+    modal = Modal.confirm({
+      ...options,
+      afterClose() {
+        modal = null;
+        if (options.afterClose === undefined) {
+          return;
+        }
+        options.afterClose();
+      },
+    });
+  };
 }
