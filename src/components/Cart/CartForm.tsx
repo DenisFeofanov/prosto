@@ -1,6 +1,9 @@
+"use client";
+
 import useDebouncedFunction from "@/lib/hooks";
 import { LeftOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, DatePicker, Form, Input } from "antd";
+import dayjs from "dayjs";
 import { ChangeEvent, MouseEvent, useState } from "react";
 
 interface Props {
@@ -10,11 +13,14 @@ interface Props {
 interface FieldType {
   username?: string;
   phone?: string;
+  pickupDate?: string;
 }
 
 type ValidateStatus = Parameters<typeof Form.Item>[0]["validateStatus"];
 
 type Phone = string | "";
+
+const dateFormat = "DD/MM/YYYY";
 
 const onFinish = (values: any) => {
   console.log("Success:", values);
@@ -34,7 +40,7 @@ const validatePhoneNumber = (
   if (phone === "") {
     return {
       validateStatus: "error",
-      errorMsg: "Поле обязательно для заполнения",
+      errorMsg: null,
     };
   }
   if (phoneRegex.test(phone)) {
@@ -104,9 +110,20 @@ export default function CartForm({ onBackClick }: Props) {
           hasFeedback
           validateStatus={phone.validateStatus}
           help={phone.errorMsg}
-          rules={[{ required: true, message: "" }]}
+          rules={[
+            { required: true, message: "Пожалуйста введите номер телефона" },
+          ]}
         >
           <Input value={phone.value} onChange={onPhoneChange} />
+        </Form.Item>
+
+        <Form.Item
+          label={"Дата самовывоза"}
+          name={"pickupDate"}
+          hasFeedback
+          rules={[{ required: true, message: "Пожалуйста укажите дату" }]}
+        >
+          <DatePicker format={dateFormat} minDate={dayjs()} />
         </Form.Item>
 
         <Form.Item className="text-right">

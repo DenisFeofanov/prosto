@@ -2,20 +2,24 @@ import CartItem from "@/components/Cart/CartItem";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { clearCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
 import { createModalShowFunc } from "@/lib/utils";
-import { Button, Divider, Modal, Typography } from "antd";
-import { MouseEvent, MouseEventHandler, useState } from "react";
+import { Button, Carousel, Divider, Modal, Typography } from "antd";
+import { MouseEvent, MouseEventHandler, useRef, useState } from "react";
 import ClearButton from "./ClearButton";
 import Form from "./CartForm";
+import { CarouselRef } from "antd/es/carousel";
 
 export default function CartModal() {
   const dispatch = useAppDispatch();
   const cartIsOpen = useAppSelector(state => state.cart.isOpen);
   const cart = useAppSelector(selectCart);
   const showModal = createModalShowFunc();
-  const [isCartComplete, setIsCartComplete] = useState(true);
+  const carouselRef = useRef<CarouselRef>(null);
 
   const handleSubmit: MouseEventHandler<HTMLElement> = event => {
-    setIsCartComplete(true);
+    if (carouselRef.current === null) {
+      return;
+    }
+    carouselRef.current.next();
   };
 
   function handleToggleCart() {
@@ -41,7 +45,10 @@ export default function CartModal() {
   }
 
   function handleBackClick(event: MouseEvent<HTMLButtonElement>): void {
-    setIsCartComplete(false);
+    if (carouselRef.current === null) {
+      return;
+    }
+    carouselRef.current.prev();
   }
 
   return (
@@ -55,9 +62,12 @@ export default function CartModal() {
         top: "2rem",
       }}
     >
-      {isCartComplete ? (
-        <Form onBackClick={handleBackClick} />
-      ) : (
+      <Carousel
+        ref={carouselRef}
+        dots={true}
+        infinite={false}
+        adaptiveHeight={true}
+      >
         <section>
           <div className="flex justify-between items-center flex-wrap gap-2 mt-8 lg:mt-0">
             <Typography.Title className="mb-2" level={2}>
@@ -95,7 +105,9 @@ export default function CartModal() {
             </Button>
           </div>
         </section>
-      )}
+
+        <Form onBackClick={handleBackClick} />
+      </Carousel>
     </Modal>
   );
 }
