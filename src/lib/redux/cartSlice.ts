@@ -36,10 +36,11 @@ const cartSlice = createSlice({
       state.bouquets = [];
     },
     updateCartItem(state, action: PayloadAction<CartItem>) {
-      const { cartId, note } = action.payload;
-      const index = state.bouquets.findIndex(item => item.cartId === cartId);
+      const index = state.bouquets.findIndex(
+        item => item.cartId === action.payload.cartId
+      );
       if (index !== -1) {
-        state.bouquets[index].note = note;
+        state.bouquets[index] = { ...state.bouquets[index], ...action.payload };
       }
     },
     toggleCart(state) {
