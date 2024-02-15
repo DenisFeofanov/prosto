@@ -59,7 +59,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
       open={isOpen}
       onOk={closeModal}
       onCancel={closeModal}
-      className="max-w-[30rem] lg:max-w-[80vw] lg:min-w-[60rem]"
+      className="w-auto max-w-[30rem] lg:max-w-[80vw] lg:min-w-[60rem]"
       footer={null}
       style={{
         top: "2rem",

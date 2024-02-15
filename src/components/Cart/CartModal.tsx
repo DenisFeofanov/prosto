@@ -33,7 +33,7 @@ export default function CartModal() {
       open={cartIsOpen}
       onOk={handleToggleCart}
       onCancel={handleToggleCart}
-      className="max-w-[30rem] lg:max-w-[50rem]"
+      className="w-auto max-w-[30rem] lg:max-w-[50rem]"
       footer={null}
       style={{
         top: "2rem",
