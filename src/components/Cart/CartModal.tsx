@@ -24,6 +24,10 @@ export default function CartModal() {
     Modal.destroyAll();
   };
 
+  if (cartIsOpen && cart.bouquets.length <= 0) {
+    handleToggleCart();
+  }
+
   return (
     <Modal
       open={cartIsOpen}

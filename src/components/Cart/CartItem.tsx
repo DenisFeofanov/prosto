@@ -4,14 +4,19 @@ import useDebouncedFunction, {
   useAppDispatch,
   useAppSelector,
 } from "@/lib/hooks";
-import { selectCart, updateCartItem } from "@/lib/redux/cartSlice";
+import {
+  removeCartItem,
+  selectCart,
+  updateCartItem,
+} from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
 import { DEFAULT_SIZE, IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
-import { Typography } from "antd";
+import { Button, Typography } from "antd";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, MouseEvent, useState } from "react";
 import NoteInput from "../NoteInput";
 import SizeDropdown from "../SizeDropdown";
+import { CloseCircleOutlined } from "@ant-design/icons";
 
 interface Props {
   cartItem: CartItem;
@@ -36,6 +41,11 @@ export default function CartItem({ cartItem }: Props) {
   }
 
   const bouquet = cartItem.data;
+
+  function handleRemoveClick(event: MouseEvent<HTMLElement>): void {
+    dispatch(removeCartItem(cartItem));
+  }
+
   return (
     <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)]">
       <Image
@@ -48,29 +58,38 @@ export default function CartItem({ cartItem }: Props) {
         height={IMAGE_HEIGHT}
       />
 
-      <div className="flex flex-col items-start justify-between gap-3">
-        <div>
-          <Typography.Title
-            className="whitespace-nowrap"
-            level={4}
-            style={{
-              margin: 0,
-            }}
-          >
-            {bouquet.name}
-          </Typography.Title>
+      <div className="flex flex-col justify-between gap-3">
+        <div className="flex justify-between ">
+          <div>
+            <Typography.Title
+              className="whitespace-nowrap"
+              level={4}
+              style={{
+                margin: 0,
+              }}
+            >
+              {bouquet.name}
+            </Typography.Title>
 
-          {bouquet.hasSize && (
-            <SizeDropdown
-              disabled={calculateRemainingAmount(bouquet, cart) <= 0}
-              selectedSize={size}
-              onSelect={handleSizeSelect}
-            />
-          )}
+            {bouquet.hasSize && (
+              <SizeDropdown
+                disabled={calculateRemainingAmount(bouquet, cart) <= 0}
+                selectedSize={size}
+                onSelect={handleSizeSelect}
+              />
+            )}
 
-          <Typography.Text className="block">
-            {formatPrice(bouquet.price)}
-          </Typography.Text>
+            <Typography.Text className="block">
+              {formatPrice(bouquet.price)}
+            </Typography.Text>
+          </div>
+
+          <Button
+            type="text"
+            danger
+            icon={<CloseCircleOutlined />}
+            onClick={handleRemoveClick}
+          />
         </div>
 
         <NoteInput note={note} onChange={handleNoteChange} />

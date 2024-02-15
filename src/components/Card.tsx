@@ -1,6 +1,6 @@
 import { Bouquet } from "@/interfaces/Order";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { addToCart, selectCart } from "@/lib/redux/cartSlice";
+import { addToCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount } from "@/lib/utils";
 import { IMAGE_WIDTH, IMAGE_HEIGHT, DEFAULT_SIZE } from "@/shared/constants";
 import { Button } from "antd";
@@ -25,6 +25,7 @@ export default function Card({ bouquet, onCardClick }: Props) {
         },
       ])
     );
+    dispatch(toggleCart());
   };
 
   return (

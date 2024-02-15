@@ -43,14 +43,24 @@ const cartSlice = createSlice({
         state.bouquets[index] = { ...state.bouquets[index], ...action.payload };
       }
     },
+    removeCartItem(state, action: PayloadAction<CartItem>) {
+      state.bouquets = state.bouquets.filter(
+        item => item.cartId !== action.payload.cartId
+      );
+    },
     toggleCart(state) {
       state.isOpen = !state.isOpen;
     },
   },
 });
 
-export const { addToCart, updateCartItem, clearCart, toggleCart } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  updateCartItem,
+  clearCart,
+  toggleCart,
+  removeCartItem,
+} = cartSlice.actions;
 export const selectCart = (state: RootState) => state.cart;
 export const selectBouquets = (state: RootState) => state.cart.bouquets;
 export default cartSlice.reducer;
