@@ -59,7 +59,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
   if (bouquet === null) return;
 
   const remainingAmount = calculateRemainingAmount(bouquet, cart);
-  const isDisabled = remainingAmount === 0;
+  const isDisabled = remainingAmount <= 0;
 
   return (
     <Modal
