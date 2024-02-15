@@ -10,8 +10,8 @@ import { DEFAULT_SIZE, IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
 import { Typography } from "antd";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
-import NoteInput from "./NoteInput";
-import SizeDropdown from "./SizeDropdown";
+import NoteInput from "../NoteInput";
+import SizeDropdown from "../SizeDropdown";
 
 interface Props {
   cartItem: CartItem;

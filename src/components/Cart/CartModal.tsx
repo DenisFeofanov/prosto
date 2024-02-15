@@ -1,9 +1,9 @@
-import CartItem from "@/components/CartItem";
+import CartItem from "@/components/Cart/CartItem";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { clearCart, selectCart } from "@/lib/redux/cartSlice";
 import { Button, Divider, Modal, Typography } from "antd";
 import { MouseEventHandler } from "react";
-import ClearButton from "./Cart/ClearButton";
+import ClearButton from "./ClearButton";
 
 interface Props {
   isOpen: boolean;

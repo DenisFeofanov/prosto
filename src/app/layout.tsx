@@ -1,4 +1,4 @@
-import Cart from "@/components/Cart";
+import Cart from "@/components/Cart/Cart";
 import { StyleProvider } from "@/lib/providers";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from "antd";
