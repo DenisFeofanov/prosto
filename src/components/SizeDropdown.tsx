@@ -1,4 +1,4 @@
-import { Size } from "@/interfaces/Bouquet";
+import { Size } from "@/interfaces/Order";
 import { isSize } from "@/lib/utils";
 import { SIZES } from "@/shared/constants";
 import { DownOutlined } from "@ant-design/icons";

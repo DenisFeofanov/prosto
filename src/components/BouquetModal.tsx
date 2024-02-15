@@ -1,4 +1,4 @@
-import { Bouquet, Size } from "@/interfaces/Bouquet";
+import { Bouquet, Size } from "@/interfaces/Order";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addToCart, selectCart } from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount, formatPrice } from "@/lib/utils";

@@ -1,4 +1,4 @@
-import { Bouquet } from "@/interfaces/Bouquet";
+import { Bouquet } from "@/interfaces/Order";
 import { Order } from "@/interfaces/Order";
 import {
   AMOUNT,

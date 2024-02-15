@@ -1,7 +1,7 @@
 "use client";
 
 import BouquetModal from "@/components/BouquetModal";
-import { Bouquet } from "@/interfaces/Bouquet";
+import { Bouquet } from "@/interfaces/Order";
 import { changeAmount, createOrder, fetchBouquets } from "@/lib/api";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addToCart, selectCart } from "@/lib/redux/cartSlice";

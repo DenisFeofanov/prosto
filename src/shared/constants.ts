@@ -1,4 +1,4 @@
-import { Size } from "@/interfaces/Bouquet";
+import { Size } from "@/interfaces/Order";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 
 export const IMAGE_WIDTH = 400;

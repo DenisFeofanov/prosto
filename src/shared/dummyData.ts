@@ -1,4 +1,4 @@
-import { Bouquet } from "@/interfaces/Bouquet";
+import { Bouquet } from "@/interfaces/Order";
 import { OrderedBouquet, Order } from "@/interfaces/Order";
 
 export const dummyOrderedItems: OrderedBouquet[] = [

@@ -1,4 +1,4 @@
-import { Bouquet } from "@/interfaces/Bouquet";
+import { Bouquet } from "@/interfaces/Order";
 import { useAppSelector } from "@/lib/hooks";
 import { selectCart } from "@/lib/redux/cartSlice";
 import { calculateRemainingAmount } from "@/lib/utils";

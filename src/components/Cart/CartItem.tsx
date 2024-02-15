@@ -1,4 +1,4 @@
-import { Size } from "@/interfaces/Bouquet";
+import { Size } from "@/interfaces/Order";
 import { CartItem } from "@/interfaces/Order";
 import useDebouncedFunction, {
   useAppDispatch,
