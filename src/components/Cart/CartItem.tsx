@@ -27,7 +27,7 @@ export default function CartItem({ cartItem }: Props) {
   function handleNoteChange(event: ChangeEvent<HTMLTextAreaElement>) {
     const newNote = event.target.value;
     setNote(newNote);
-    debouncedDispatch(updateCartItem({ ...cartItem, note }));
+    debouncedDispatch(updateCartItem({ ...cartItem, note: newNote }));
   }
 
   function handleSizeSelect(size: Size) {
