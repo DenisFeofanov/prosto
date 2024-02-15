@@ -1,34 +1,34 @@
 import CartItem from "@/components/Cart/CartItem";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { clearCart, selectCart } from "@/lib/redux/cartSlice";
+import { clearCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
 import { Button, Divider, Modal, Typography } from "antd";
 import { MouseEventHandler } from "react";
 import ClearButton from "./ClearButton";
 
-interface Props {
-  isOpen: boolean;
-  closeModal: () => void;
-}
-
-export default function CartModal({ isOpen, closeModal }: Props) {
+export default function CartModal() {
   const dispatch = useAppDispatch();
+  const cartIsOpen = useAppSelector(state => state.cart.isOpen);
   const cart = useAppSelector(selectCart);
 
   const handleSubmit: MouseEventHandler<HTMLElement> = event => {
     console.log("TODO: create new order");
   };
 
+  function handleToggleCart() {
+    dispatch(toggleCart());
+  }
+
   const handleClearCart = () => {
     dispatch(clearCart());
-    closeModal();
+    handleToggleCart();
     Modal.destroyAll();
   };
 
   return (
     <Modal
-      open={isOpen}
-      onOk={closeModal}
-      onCancel={closeModal}
+      open={cartIsOpen}
+      onOk={handleToggleCart}
+      onCancel={handleToggleCart}
       className="max-w-[30rem] lg:max-w-[50rem]"
       footer={null}
       style={{

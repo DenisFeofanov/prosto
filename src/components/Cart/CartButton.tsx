@@ -1,20 +1,21 @@
 "use client";
 
-import { useAppSelector } from "@/lib/hooks";
-import { selectCart } from "@/lib/redux/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { selectCart, toggleCart } from "@/lib/redux/cartSlice";
 import { FloatButton } from "antd";
 
-interface Props {
-  onClick: () => void;
-}
-
-export default function CartButton({ onClick }: Props) {
+export default function CartButton() {
   const cart = useAppSelector(selectCart);
+  const dispatch = useAppDispatch();
+
+  function handleClick() {
+    dispatch(toggleCart());
+  }
 
   return (
     <FloatButton
       badge={{ count: cart.bouquets.length }}
-      onClick={onClick}
+      onClick={handleClick}
       tooltip="Корзина"
     />
   );

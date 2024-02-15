@@ -3,10 +3,12 @@ import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
 export interface CartState {
+  isOpen: boolean;
   bouquets: CartItem[];
 }
 
 const initialState: CartState = {
+  isOpen: false,
   bouquets: [],
 };
 
@@ -40,10 +42,14 @@ const cartSlice = createSlice({
         state.bouquets[index].note = note;
       }
     },
+    toggleCart(state) {
+      state.isOpen = !state.isOpen;
+    },
   },
 });
 
-export const { addToCart, updateCartItem, clearCart } = cartSlice.actions;
+export const { addToCart, updateCartItem, clearCart, toggleCart } =
+  cartSlice.actions;
 export const selectCart = (state: RootState) => state.cart;
 export const selectBouquets = (state: RootState) => state.cart.bouquets;
 export default cartSlice.reducer;
