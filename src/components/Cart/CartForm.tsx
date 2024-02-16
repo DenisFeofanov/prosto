@@ -1,11 +1,14 @@
 "use client";
 
 import { createOrder } from "@/lib/api";
-import useDebouncedFunction, { useAppSelector } from "@/lib/hooks";
-import { selectCart } from "@/lib/redux/cartSlice";
+import useDebouncedFunction, {
+  useAppDispatch,
+  useAppSelector,
+} from "@/lib/hooks";
+import { clearCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
 import { calculateFullPrice } from "@/lib/utils";
 import { LeftOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input } from "antd";
+import { Button, DatePicker, Form, Input, Modal } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { ChangeEvent, MouseEvent, useState } from "react";
 
@@ -30,10 +33,6 @@ type ValidateStatus = Parameters<typeof Form.Item>[0]["validateStatus"];
 type Phone = string | "";
 
 const dateFormat = "DD/MM/YYYY";
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log("Failed:", errorInfo);
-};
 
 const validatePhoneNumber = (
   phone: Phone
@@ -68,6 +67,7 @@ export default function CartForm({ onBackClick }: Props) {
   }>({ value: "" });
   const setPhoneDebounced = useDebouncedFunction(setPhone, 500);
   const cart = useAppSelector(selectCart);
+  const dispatch = useAppDispatch();
 
   const onPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -97,7 +97,10 @@ export default function CartForm({ onBackClick }: Props) {
         total: calculateFullPrice(cart),
         items: cart.bouquets,
       });
-      console.log("TODO: Create is successful: ", result);
+
+      Modal.destroyAll();
+      dispatch(clearCart());
+      dispatch(toggleCart());
     } catch (error) {
       console.log("TODO: display in UI:", error);
     }
@@ -115,7 +118,6 @@ export default function CartForm({ onBackClick }: Props) {
         layout="vertical"
         initialValues={{ remember: true }}
         onFinish={handleSubmit}
-        onFinishFailed={onFinishFailed}
         autoComplete="on"
       >
         <Form.Item<FieldType>
@@ -149,7 +151,7 @@ export default function CartForm({ onBackClick }: Props) {
           <DatePicker format={dateFormat} minDate={dayjs()} placeholder="" />
         </Form.Item>
 
-        <Form.Item className="text-right">
+        {/* <Form.Item className="text-right">
           <Button
             className="bg-[#00aa00] hover:bg-[#00c800] block w-full lg:inline-block lg:w-auto"
             type="primary"
@@ -158,7 +160,7 @@ export default function CartForm({ onBackClick }: Props) {
           >
             Оформить заказ
           </Button>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </section>
   );
