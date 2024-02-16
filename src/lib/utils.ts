@@ -1,5 +1,5 @@
-import { Bouquet, Size } from "@/interfaces/Order";
-import { OrderedBouquet } from "@/interfaces/Order";
+import { ModalOptions } from "@/interfaces/Modal";
+import { Bouquet, CartItem, Size } from "@/interfaces/Order";
 import {
   AMOUNT,
   DESCRIPTION,
@@ -10,9 +10,8 @@ import {
 } from "@/shared/bouquetsDatabaseProperties";
 import { isFullPage } from "@notionhq/client";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
-import { CartState } from "./redux/cartSlice";
 import { Modal } from "antd";
-import { ModalOptions } from "@/interfaces/Modal";
+import { CartState } from "./redux/cartSlice";
 
 /**
  * Parses the response from the API into an array of Bouquet objects
@@ -57,13 +56,14 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
   });
 }
 
-export function convertOrderToString(order: OrderedBouquet[]): string {
-  return order
-    .reduce((acc, order) => {
-      const size = order.size ? `размер ${order.size}, ` : "";
-      const note = order.note ? `открытка "${order.note}"` : "";
-      return "";
-      // return `${acc}- ${order.data.name}, ${order.amountOrdered} шт., ${size}цена ${order.data.price}р, ${note}\n`;
+export function convertOrderToString(orderedBouquets: CartItem[]): string {
+  return orderedBouquets
+    .reduce((acc, orderedBouquet) => {
+      const size = orderedBouquet.size ? `размер ${orderedBouquet.size}, ` : "";
+      const note = orderedBouquet.note
+        ? `открытка "${orderedBouquet.note}", `
+        : "";
+      return `${acc}- ${orderedBouquet.data.name}, ${size}${note}цена ${orderedBouquet.data.price}р\n`;
     }, "")
     .trimEnd();
 }
@@ -112,4 +112,8 @@ export function createModalShowFunc() {
       },
     });
   };
+}
+
+export function calculateFullPrice(cart: CartState): number {
+  return cart.bouquets.reduce((acc, { data }) => acc + data.price, 0);
 }

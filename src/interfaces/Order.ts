@@ -27,7 +27,7 @@ export interface CartItem {
 
 interface BaseOrder {
   total: number;
-  items: OrderedBouquet[];
+  items: CartItem[];
   clientName: string;
   clientPhone: string;
 }

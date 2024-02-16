@@ -1,9 +1,12 @@
 "use client";
 
-import useDebouncedFunction from "@/lib/hooks";
+import { createOrder } from "@/lib/api";
+import useDebouncedFunction, { useAppSelector } from "@/lib/hooks";
+import { selectCart } from "@/lib/redux/cartSlice";
+import { calculateFullPrice } from "@/lib/utils";
 import { LeftOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input } from "antd";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { ChangeEvent, MouseEvent, useState } from "react";
 
 interface Props {
@@ -16,15 +19,17 @@ interface FieldType {
   pickupDate?: string;
 }
 
+interface SubmittedValues {
+  username: string;
+  phone: string;
+  pickupDate: Dayjs;
+}
+
 type ValidateStatus = Parameters<typeof Form.Item>[0]["validateStatus"];
 
 type Phone = string | "";
 
 const dateFormat = "DD/MM/YYYY";
-
-const onFinish = (values: any) => {
-  console.log("Success:", values);
-};
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -62,6 +67,7 @@ export default function CartForm({ onBackClick }: Props) {
     errorMsg?: string | null;
   }>({ value: "" });
   const setPhoneDebounced = useDebouncedFunction(setPhone, 500);
+  const cart = useAppSelector(selectCart);
 
   const onPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -80,6 +86,23 @@ export default function CartForm({ onBackClick }: Props) {
     });
   };
 
+  async function handleSubmit(values: SubmittedValues) {
+    const { username, phone, pickupDate } = values;
+    try {
+      const result = await createOrder({
+        kind: "pickup",
+        clientName: username,
+        clientPhone: phone,
+        pickupTime: pickupDate.toISOString(),
+        total: calculateFullPrice(cart),
+        items: cart.bouquets,
+      });
+      console.log("TODO: Create is successful: ", result);
+    } catch (error) {
+      console.log("TODO: display in UI:", error);
+    }
+  }
+
   return (
     <section>
       <Button onClick={onBackClick} icon={<LeftOutlined />}>
@@ -91,9 +114,9 @@ export default function CartForm({ onBackClick }: Props) {
         name="basic"
         layout="vertical"
         initialValues={{ remember: true }}
-        onFinish={onFinish}
+        onFinish={handleSubmit}
         onFinishFailed={onFinishFailed}
-        autoComplete="off"
+        autoComplete="on"
       >
         <Form.Item<FieldType>
           label="ФИО"
@@ -123,7 +146,7 @@ export default function CartForm({ onBackClick }: Props) {
           hasFeedback
           rules={[{ required: true, message: "Пожалуйста укажите дату" }]}
         >
-          <DatePicker format={dateFormat} minDate={dayjs()} />
+          <DatePicker format={dateFormat} minDate={dayjs()} placeholder="" />
         </Form.Item>
 
         <Form.Item className="text-right">
