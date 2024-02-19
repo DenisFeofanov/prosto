@@ -23,6 +23,10 @@ export default function CartModal() {
   };
 
   function handleToggleCart() {
+    if (carouselRef.current === null) {
+      return;
+    }
+    carouselRef.current.goTo(0);
     dispatch(toggleCart());
   }
 

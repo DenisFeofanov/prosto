@@ -151,7 +151,7 @@ export default function CartForm({ onBackClick }: Props) {
           <DatePicker format={dateFormat} minDate={dayjs()} placeholder="" />
         </Form.Item>
 
-        {/* <Form.Item className="text-right">
+        <Form.Item className="text-right">
           <Button
             className="bg-[#00aa00] hover:bg-[#00c800] block w-full lg:inline-block lg:w-auto"
             type="primary"
@@ -160,7 +160,7 @@ export default function CartForm({ onBackClick }: Props) {
           >
             Оформить заказ
           </Button>
-        </Form.Item> */}
+        </Form.Item>
       </Form>
     </section>
   );
