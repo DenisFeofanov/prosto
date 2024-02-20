@@ -148,7 +148,12 @@ export default function CartForm({ onBackClick }: Props) {
           hasFeedback
           rules={[{ required: true, message: "Пожалуйста укажите дату" }]}
         >
-          <DatePicker format={dateFormat} minDate={dayjs()} placeholder="" />
+          <DatePicker
+            format={dateFormat}
+            minDate={dayjs()}
+            placeholder=""
+            inputReadOnly={true}
+          />
         </Form.Item>
 
         <Form.Item className="text-right">
