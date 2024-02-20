@@ -1,5 +1,4 @@
-import { Size } from "@/interfaces/Order";
-import { CartItem } from "@/interfaces/Order";
+import { CartItem, Size } from "@/interfaces/Order";
 import useDebouncedFunction, {
   useAppDispatch,
   useAppSelector,
@@ -15,12 +14,12 @@ import {
   formatPrice,
 } from "@/lib/utils";
 import { DEFAULT_SIZE, IMAGE_HEIGHT, IMAGE_WIDTH } from "@/shared/constants";
-import { Button, Modal, Typography } from "antd";
+import { Typography } from "antd";
 import Image from "next/image";
 import { ChangeEvent, MouseEvent, useState } from "react";
 import NoteInput from "../NoteInput";
 import SizeDropdown from "../SizeDropdown";
-import { CloseCircleOutlined } from "@ant-design/icons";
+import ClearItemButton from "./ClearItemButton";
 
 interface Props {
   cartItem: CartItem;
@@ -60,53 +59,57 @@ export default function CartItem({ cartItem }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)]">
-      <Image
-        className="rounded-md"
-        src={bouquet.photos[0]}
-        alt="Превью букета"
-        // not wider than 500px
-        sizes="400px"
-        width={IMAGE_WIDTH}
-        height={IMAGE_HEIGHT}
+    <>
+      <ClearItemButton
+        onClick={handleRemoveClick}
+        className="ml-auto block mb-2 lg:hidden"
       />
 
-      <div className="flex flex-col justify-between gap-3">
-        <div className="flex justify-between ">
-          <div>
-            <Typography.Title
-              className="whitespace-nowrap"
-              level={4}
-              style={{
-                margin: 0,
-              }}
-            >
-              {bouquet.name}
-            </Typography.Title>
+      <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)]">
+        <Image
+          className="rounded-md"
+          src={bouquet.photos[0]}
+          alt="Превью букета"
+          // not wider than 500px
+          sizes="400px"
+          width={IMAGE_WIDTH}
+          height={IMAGE_HEIGHT}
+        />
 
-            {bouquet.hasSize && (
-              <SizeDropdown
-                disabled={calculateRemainingAmount(bouquet, cart) <= 0}
-                selectedSize={size}
-                onSelect={handleSizeSelect}
-              />
-            )}
+        <div className="flex flex-col justify-between gap-3">
+          <div className="flex flex-col-reverse flex-wrap lg:justify-between lg:flex-row lg:gap-3">
+            <div>
+              <Typography.Title
+                level={4}
+                style={{
+                  margin: 0,
+                }}
+              >
+                {bouquet.name}
+              </Typography.Title>
 
-            <Typography.Text className="block">
-              {formatPrice(bouquet.price)}
-            </Typography.Text>
+              {bouquet.hasSize && (
+                <SizeDropdown
+                  disabled={calculateRemainingAmount(bouquet, cart) <= 0}
+                  selectedSize={size}
+                  onSelect={handleSizeSelect}
+                />
+              )}
+
+              <Typography.Text className="block">
+                {formatPrice(bouquet.price)}
+              </Typography.Text>
+            </div>
+
+            <ClearItemButton
+              onClick={handleRemoveClick}
+              className="hidden lg:inline-block"
+            />
           </div>
 
-          <Button
-            type="text"
-            danger
-            icon={<CloseCircleOutlined />}
-            onClick={handleRemoveClick}
-          />
+          <NoteInput note={note} onChange={handleNoteChange} />
         </div>
-
-        <NoteInput note={note} onChange={handleNoteChange} />
       </div>
-    </div>
+    </>
   );
 }

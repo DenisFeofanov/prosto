@@ -68,9 +68,10 @@ export default function CartModal() {
     >
       <Carousel
         ref={carouselRef}
-        dots={true}
+        dots={false}
         infinite={false}
         adaptiveHeight={true}
+        touchMove={false}
       >
         <section>
           <div className="flex justify-between items-center flex-wrap gap-2 mt-8 lg:mt-0">
