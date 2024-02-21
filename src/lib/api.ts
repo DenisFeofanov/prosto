@@ -43,7 +43,7 @@ export async function fetchBouquets(): Promise<Bouquet[]> {
           {
             property: AMOUNT,
             number: {
-              is_not_empty: true,
+              greater_than: 0,
             },
           },
           {
