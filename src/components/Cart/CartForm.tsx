@@ -32,7 +32,7 @@ type ValidateStatus = Parameters<typeof Form.Item>[0]["validateStatus"];
 
 type Phone = string | "";
 
-const dateFormat = "DD/MM/YYYY";
+const dateFormat = "DD/MM/YYYY HH:mm";
 
 const validatePhoneNumber = (
   phone: Phone
@@ -149,6 +149,11 @@ export default function CartForm({ onBackClick }: Props) {
           rules={[{ required: true, message: "Пожалуйста укажите дату" }]}
         >
           <DatePicker
+            placement="bottomLeft"
+            showTime={{
+              format: "HH:mm",
+            }}
+            defaultValue={dayjs().add(1, "hour")}
             format={dateFormat}
             minDate={dayjs()}
             placeholder=""

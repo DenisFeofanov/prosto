@@ -71,9 +71,9 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
         <div className="mt-4 lg:m-0">
           <Typography.Title level={2}>{bouquet.name}</Typography.Title>
           <p className="text-gray-600 mb-4 text-base">{bouquet.description}</p>
-          <p className="text-lg font-bold mb-4">{formatPrice(bouquet.price)}</p>
+          <p className="text-lg font-bold">{formatPrice(bouquet.price)}</p>
 
-          <Space direction="vertical" className="w-full">
+          <div className="w-full mt-4">
             <Space>
               <InputNumber
                 min={1}
@@ -100,20 +100,20 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
               </Typography>
             )}
 
-            <NoteInput note={note} onChange={handleNoteChange} />
-          </Space>
-
-          <div>
-            <Button
-              className="mt-4"
-              onClick={() => handleAddToCartClick(bouquet)}
-              size="middle"
-              type="primary"
-              disabled={isDisabled}
-            >
-              Купить
-            </Button>
+            <div className="mt-4">
+              <NoteInput note={note} onChange={handleNoteChange} />
+            </div>
           </div>
+
+          <Button
+            className="mt-4"
+            onClick={() => handleAddToCartClick(bouquet)}
+            size="middle"
+            type="primary"
+            disabled={isDisabled}
+          >
+            Купить
+          </Button>
         </div>
       </div>
     </Modal>
