@@ -1,25 +1,28 @@
 "use client";
 
+import { Phone, ValidateStatus } from "@/interfaces/OrderForm";
 import { createOrder } from "@/lib/api";
 import useDebouncedFunction, {
   useAppDispatch,
   useAppSelector,
 } from "@/lib/hooks";
 import { clearCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
-import { calculateFullPrice } from "@/lib/utils";
+import { calculateFullPrice, validatePhoneNumber } from "@/lib/utils";
 import { LeftOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Modal } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Switch } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { ChangeEvent, MouseEvent, useState } from "react";
 
 interface Props {
   onBackClick: (event: MouseEvent<HTMLButtonElement>) => void;
+  rerenderParent: () => void;
 }
 
 interface FieldType {
   username?: string;
   phone?: string;
   pickupDate?: string;
+  isDelivery?: boolean;
 }
 
 interface SubmittedValues {
@@ -28,63 +31,18 @@ interface SubmittedValues {
   pickupDate: Dayjs;
 }
 
-type ValidateStatus = Parameters<typeof Form.Item>[0]["validateStatus"];
-
-type Phone = string | "";
-
 const dateFormat = "DD/MM/YYYY HH:mm";
 
-const validatePhoneNumber = (
-  phone: Phone
-): {
-  validateStatus: ValidateStatus;
-  errorMsg: string | null;
-} => {
-  const phoneRegex = new RegExp(/^(8|\+7)\d{3}\d{3}\d{2}\d{2}$/);
-  if (phone === "") {
-    return {
-      validateStatus: "error",
-      errorMsg: null,
-    };
-  }
-  if (phoneRegex.test(phone)) {
-    return {
-      validateStatus: "success",
-      errorMsg: null,
-    };
-  }
-  return {
-    validateStatus: "error",
-    errorMsg: "Некорректный формат телефона",
-  };
-};
-
-export default function CartForm({ onBackClick }: Props) {
+export default function CartForm({ onBackClick, rerenderParent }: Props) {
   const [phone, setPhone] = useState<{
     value: Phone;
     validateStatus?: ValidateStatus;
     errorMsg?: string | null;
   }>({ value: "" });
+  const [isDelivery, setIsDelivery] = useState(false);
   const setPhoneDebounced = useDebouncedFunction(setPhone, 500);
   const cart = useAppSelector(selectCart);
   const dispatch = useAppDispatch();
-
-  const onPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    if (value === "") {
-      setPhone({
-        ...validatePhoneNumber(value),
-        value,
-      });
-      return;
-    }
-
-    setPhone({ ...phone, validateStatus: "validating", errorMsg: null });
-    setPhoneDebounced({
-      ...validatePhoneNumber(value),
-      value,
-    });
-  };
 
   async function handleSubmit(values: SubmittedValues) {
     const { username, phone, pickupDate } = values;
@@ -106,6 +64,28 @@ export default function CartForm({ onBackClick }: Props) {
     }
   }
 
+  const toggleDelivery = (checked: boolean) => {
+    setIsDelivery(checked);
+    rerenderParent();
+  };
+
+  const onPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    if (value === "") {
+      setPhone({
+        ...validatePhoneNumber(value),
+        value,
+      });
+      return;
+    }
+
+    setPhone({ ...phone, validateStatus: "validating", errorMsg: null });
+    setPhoneDebounced({
+      ...validatePhoneNumber(value),
+      value,
+    });
+  };
+
   return (
     <section>
       <Button onClick={onBackClick} icon={<LeftOutlined />}>
@@ -116,7 +96,7 @@ export default function CartForm({ onBackClick }: Props) {
         className="max-w-full mx-auto lg:max-w-[50%] mt-6"
         name="basic"
         layout="vertical"
-        initialValues={{ remember: true }}
+        initialValues={{ pickupDate: dayjs().add(3, "hour") }}
         onFinish={handleSubmit}
         autoComplete="on"
       >
@@ -142,7 +122,7 @@ export default function CartForm({ onBackClick }: Props) {
           <Input value={phone.value} onChange={onPhoneChange} />
         </Form.Item>
 
-        <Form.Item
+        <Form.Item<FieldType>
           label={"Дата самовывоза"}
           name={"pickupDate"}
           hasFeedback
@@ -153,13 +133,43 @@ export default function CartForm({ onBackClick }: Props) {
             showTime={{
               format: "HH:mm",
             }}
-            defaultValue={dayjs().add(1, "hour")}
             format={dateFormat}
             minDate={dayjs()}
             placeholder=""
             inputReadOnly={true}
           />
         </Form.Item>
+
+        <Form.Item<FieldType> name="isDelivery" valuePropName="checked">
+          <div className="flex gap-4">
+            <Switch
+              onChange={toggleDelivery}
+              value={isDelivery}
+              id="isDelivery"
+            />
+            <label htmlFor="isDelivery">Нужна доставка</label>
+          </div>
+        </Form.Item>
+
+        {isDelivery && (
+          <div>
+            <Form.Item<FieldType>
+              label="Телефон"
+              name="phone"
+              hasFeedback
+              validateStatus={phone.validateStatus}
+              help={phone.errorMsg}
+              rules={[
+                {
+                  required: true,
+                  message: "Пожалуйста введите номер телефона",
+                },
+              ]}
+            >
+              <Input value={phone.value} onChange={onPhoneChange} />
+            </Form.Item>
+          </div>
+        )}
 
         <Form.Item className="text-right">
           <Button

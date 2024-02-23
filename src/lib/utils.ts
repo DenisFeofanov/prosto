@@ -12,6 +12,7 @@ import { isFullPage } from "@notionhq/client";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Modal } from "antd";
 import { CartState } from "./redux/cartSlice";
+import { Phone, ValidateStatus } from "@/interfaces/OrderForm";
 
 /**
  * Parses the response from the API into an array of Bouquet objects
@@ -117,3 +118,28 @@ export function createModalShowFunc() {
 export function calculateFullPrice(cart: CartState): number {
   return cart.bouquets.reduce((acc, { data }) => acc + data.price, 0);
 }
+
+export const validatePhoneNumber = (
+  phone: Phone
+): {
+  validateStatus: ValidateStatus;
+  errorMsg: string | null;
+} => {
+  const phoneRegex = new RegExp(/^(8|\+7)\d{3}\d{3}\d{2}\d{2}$/);
+  if (phone === "") {
+    return {
+      validateStatus: "error",
+      errorMsg: null,
+    };
+  }
+  if (phoneRegex.test(phone)) {
+    return {
+      validateStatus: "success",
+      errorMsg: null,
+    };
+  }
+  return {
+    validateStatus: "error",
+    errorMsg: "Некорректный формат телефона",
+  };
+};

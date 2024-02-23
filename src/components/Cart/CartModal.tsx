@@ -14,6 +14,12 @@ export default function CartModal() {
   const cart = useAppSelector(selectCart);
   const showModal = createModalShowFunc();
   const carouselRef = useRef<CarouselRef>(null);
+  const [rerender, setRerender] = useState(false);
+
+  // the modal doesn't update on its own when children update
+  const rerenderModal = () => {
+    setRerender(!rerender);
+  };
 
   const handleSubmit: MouseEventHandler<HTMLElement> = event => {
     if (carouselRef.current === null) {
@@ -111,7 +117,7 @@ export default function CartModal() {
           </div>
         </section>
 
-        <Form onBackClick={handleBackClick} />
+        <Form onBackClick={handleBackClick} rerenderParent={rerenderModal} />
       </Carousel>
     </Modal>
   );
