@@ -7,6 +7,7 @@ import { MouseEvent, MouseEventHandler, useRef, useState } from "react";
 import ClearButton from "./ClearButton";
 import Form from "./CartForm";
 import { CarouselRef } from "antd/es/carousel";
+import Success from "./Success";
 
 export default function CartModal() {
   const dispatch = useAppDispatch();
@@ -15,6 +16,8 @@ export default function CartModal() {
   const showModal = createModalShowFunc();
   const carouselRef = useRef<CarouselRef>(null);
   const [rerender, setRerender] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // the modal doesn't update on its own when children update
   const rerenderModal = () => {
@@ -29,11 +32,22 @@ export default function CartModal() {
   };
 
   function handleToggleCart() {
+    if (isSuccess) {
+      setIsSuccess(false);
+    }
+
+    // cancel cart toggle when loading
+    if (isLoading) {
+      return;
+    }
+
+    dispatch(toggleCart());
+
     if (carouselRef.current === null) {
       return;
     }
+
     carouselRef.current.goTo(0);
-    dispatch(toggleCart());
   }
 
   const handleClearCart = () => {
@@ -50,7 +64,7 @@ export default function CartModal() {
     });
   };
 
-  if (cartIsOpen && cart.bouquets.length <= 0) {
+  if (cartIsOpen && !isSuccess && cart.bouquets.length <= 0) {
     handleToggleCart();
   }
 
@@ -59,6 +73,10 @@ export default function CartModal() {
       return;
     }
     carouselRef.current.prev();
+  }
+
+  function handleSuccess() {
+    setIsSuccess(true);
   }
 
   return (
@@ -72,57 +90,63 @@ export default function CartModal() {
         top: "2rem",
       }}
     >
-      <Carousel
-        ref={carouselRef}
-        dots={false}
-        infinite={false}
-        adaptiveHeight={true}
-        touchMove={false}
-      >
-        <section>
-          <div className="flex justify-between items-center flex-wrap gap-2 mt-8 lg:mt-0">
-            <Typography.Title className="mb-2" level={2}>
-              Корзина
-            </Typography.Title>
+      {isSuccess ? (
+        <Success onClick={handleToggleCart} />
+      ) : (
+        <Carousel
+          ref={carouselRef}
+          dots={false}
+          infinite={false}
+          adaptiveHeight={true}
+          touchMove={false}
+        >
+          <section>
+            <div className="flex justify-between items-center flex-wrap gap-2 mt-8 lg:mt-0">
+              <Typography.Title className="mb-2" level={2}>
+                Корзина
+              </Typography.Title>
 
-            <ClearButton className="lg:hidden" onClick={handleClearCart} />
-          </div>
+              <ClearButton className="lg:hidden" onClick={handleClearCart} />
+            </div>
 
-          <Divider />
-          <ul className="flex flex-col items-start gap-10">
-            {cart.bouquets.map(cartItem => {
-              return (
-                <li key={cartItem.cartId}>
-                  <CartItem cartItem={cartItem} />
-                </li>
-              );
-            })}
-          </ul>
-          <Divider />
+            <Divider />
+            <ul className="flex flex-col items-start gap-10">
+              {cart.bouquets.map(cartItem => {
+                return (
+                  <li key={cartItem.cartId}>
+                    <CartItem cartItem={cartItem} />
+                  </li>
+                );
+              })}
+            </ul>
+            <Divider />
 
-          <div className="flex justify-between flex-wrap gap-6">
-            <ClearButton
-              className="hidden lg:inline-block"
-              onClick={handleClearCart}
-            />
+            <div className="flex justify-between flex-wrap gap-6">
+              <ClearButton
+                className="hidden lg:inline-block"
+                onClick={handleClearCart}
+              />
 
-            <Button
-              className="block w-full lg:inline-block lg:w-auto"
-              type="primary"
-              onClick={handleSubmit}
-              size="middle"
-            >
-              Далее
-            </Button>
-          </div>
-        </section>
+              <Button
+                className="block w-full lg:inline-block lg:w-auto"
+                type="primary"
+                onClick={handleSubmit}
+                size="middle"
+              >
+                Далее
+              </Button>
+            </div>
+          </section>
 
-        <Form
-          onBackClick={handleBackClick}
-          rerenderParent={rerenderModal}
-          onToggleCart={handleToggleCart}
-        />
-      </Carousel>
+          <Form
+            onBackClick={handleBackClick}
+            rerenderParent={rerenderModal}
+            onSuccess={handleSuccess}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+          />
+        </Carousel>
+      )}
     </Modal>
   );
 }

@@ -17,7 +17,9 @@ import { ChangeEvent, MouseEvent, useState } from "react";
 interface Props {
   onBackClick: (event: MouseEvent<HTMLButtonElement>) => void;
   rerenderParent: () => void;
-  onToggleCart: () => void;
+  onSuccess: () => void;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const dateFormat = "DD/MM/YYYY HH:mm";
@@ -26,7 +28,9 @@ const debounceTime = 500;
 export default function CartForm({
   onBackClick,
   rerenderParent,
-  onToggleCart: toggleCart,
+  onSuccess,
+  setIsLoading,
+  isLoading,
 }: Props) {
   const [clientPhone, setClientPhone] = useState<Phone>({ value: "" });
   const [recipientPhone, setRecipientPhone] = useState<Phone>({ value: "" });
@@ -43,7 +47,7 @@ export default function CartForm({
   const dispatch = useAppDispatch();
 
   async function handleSubmit(values: SubmittedValues) {
-    console.log(values);
+    setIsLoading(true);
     try {
       if (values.isDelivery) {
         const {
@@ -79,12 +83,13 @@ export default function CartForm({
         });
       }
 
-      Modal.destroyAll();
       dispatch(clearCart());
-      toggleCart();
+      onSuccess();
     } catch (error) {
       console.log("TODO: display in UI:", error);
     }
+
+    setIsLoading(false);
   }
 
   const toggleDelivery = (checked: boolean) => {
@@ -237,7 +242,6 @@ export default function CartForm({
           <Form.Item<FieldType>
             label={"Дата самовывоза"}
             name={"pickupDate"}
-            hasFeedback
             rules={[{ required: true, message: "Пожалуйста укажите дату" }]}
           >
             <DatePicker
@@ -249,6 +253,7 @@ export default function CartForm({
               minDate={dayjs()}
               placeholder=""
               inputReadOnly={true}
+              allowClear={false}
             />
           </Form.Item>
         )}
@@ -259,6 +264,7 @@ export default function CartForm({
             type="primary"
             size="middle"
             htmlType="submit"
+            loading={isLoading}
           >
             Оформить заказ
           </Button>
