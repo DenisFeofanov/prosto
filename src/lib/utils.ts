@@ -1,5 +1,6 @@
 import { ModalOptions } from "@/interfaces/Modal";
 import { Bouquet, CartItem, Size } from "@/interfaces/Order";
+import { ValidateStatus } from "@/interfaces/OrderForm";
 import {
   AMOUNT,
   DESCRIPTION,
@@ -12,7 +13,6 @@ import { isFullPage } from "@notionhq/client";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Modal } from "antd";
 import { CartState } from "./redux/cartSlice";
-import { Phone, ValidateStatus } from "@/interfaces/OrderForm";
 
 /**
  * Parses the response from the API into an array of Bouquet objects
@@ -120,7 +120,7 @@ export function calculateFullPrice(cart: CartState): number {
 }
 
 export const validatePhoneNumber = (
-  phone: Phone
+  phone: string
 ): {
   validateStatus: ValidateStatus;
   errorMsg: string | null;

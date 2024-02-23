@@ -20,37 +20,43 @@ interface Props {
 
 interface FieldType {
   username?: string;
-  phone?: string;
+  clientPhone?: string;
   pickupDate?: string;
   isDelivery?: boolean;
+  recipientPhone?: string;
 }
 
 interface SubmittedValues {
   username: string;
-  phone: string;
+  clientPhone: string;
   pickupDate: Dayjs;
 }
 
 const dateFormat = "DD/MM/YYYY HH:mm";
+const debounceTime = 500;
 
 export default function CartForm({ onBackClick, rerenderParent }: Props) {
-  const [phone, setPhone] = useState<{
-    value: Phone;
-    validateStatus?: ValidateStatus;
-    errorMsg?: string | null;
-  }>({ value: "" });
+  const [clientPhone, setClientPhone] = useState<Phone>({ value: "" });
+  const [recipientPhone, setRecipientPhone] = useState<Phone>({ value: "" });
   const [isDelivery, setIsDelivery] = useState(false);
-  const setPhoneDebounced = useDebouncedFunction(setPhone, 500);
+  const setClientPhoneDebounced = useDebouncedFunction(
+    setClientPhone,
+    debounceTime
+  );
+  const setRecipientPhoneDebounced = useDebouncedFunction(
+    setRecipientPhone,
+    debounceTime
+  );
   const cart = useAppSelector(selectCart);
   const dispatch = useAppDispatch();
 
   async function handleSubmit(values: SubmittedValues) {
-    const { username, phone, pickupDate } = values;
+    const { username, clientPhone, pickupDate } = values;
     try {
       const result = await createOrder({
         kind: "pickup",
         clientName: username,
-        clientPhone: phone,
+        clientPhone,
         pickupTime: pickupDate.toISOString(),
         total: calculateFullPrice(cart),
         items: cart.bouquets,
@@ -69,18 +75,43 @@ export default function CartForm({ onBackClick, rerenderParent }: Props) {
     rerenderParent();
   };
 
-  const onPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onClientPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (value === "") {
-      setPhone({
+      setClientPhone({
         ...validatePhoneNumber(value),
         value,
       });
       return;
     }
 
-    setPhone({ ...phone, validateStatus: "validating", errorMsg: null });
-    setPhoneDebounced({
+    setClientPhone({
+      ...clientPhone,
+      validateStatus: "validating",
+      errorMsg: null,
+    });
+    setClientPhoneDebounced({
+      ...validatePhoneNumber(value),
+      value,
+    });
+  };
+
+  const onRecipientPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    if (value === "") {
+      setRecipientPhone({
+        ...validatePhoneNumber(value),
+        value,
+      });
+      return;
+    }
+
+    setRecipientPhone({
+      ...clientPhone,
+      validateStatus: "validating",
+      errorMsg: null,
+    });
+    setRecipientPhoneDebounced({
       ...validatePhoneNumber(value),
       value,
     });
@@ -111,15 +142,15 @@ export default function CartForm({ onBackClick, rerenderParent }: Props) {
 
         <Form.Item<FieldType>
           label="Телефон"
-          name="phone"
+          name="clientPhone"
           hasFeedback
-          validateStatus={phone.validateStatus}
-          help={phone.errorMsg}
+          validateStatus={clientPhone.validateStatus}
+          help={clientPhone.errorMsg}
           rules={[
             { required: true, message: "Пожалуйста введите номер телефона" },
           ]}
         >
-          <Input value={phone.value} onChange={onPhoneChange} />
+          <Input value={clientPhone.value} onChange={onClientPhoneChange} />
         </Form.Item>
 
         <Form.Item<FieldType>
@@ -155,10 +186,10 @@ export default function CartForm({ onBackClick, rerenderParent }: Props) {
           <div>
             <Form.Item<FieldType>
               label="Телефон"
-              name="phone"
+              name="recipientPhone"
               hasFeedback
-              validateStatus={phone.validateStatus}
-              help={phone.errorMsg}
+              validateStatus={recipientPhone.validateStatus}
+              help={recipientPhone.errorMsg}
               rules={[
                 {
                   required: true,
@@ -166,7 +197,10 @@ export default function CartForm({ onBackClick, rerenderParent }: Props) {
                 },
               ]}
             >
-              <Input value={phone.value} onChange={onPhoneChange} />
+              <Input
+                value={recipientPhone.value}
+                onChange={onRecipientPhoneChange}
+              />
             </Form.Item>
           </div>
         )}
