@@ -1,4 +1,6 @@
 import { Form } from "antd";
+import { DeliveryTime } from "./Order";
+import { Dayjs } from "dayjs";
 
 export type ValidateStatus = Parameters<typeof Form.Item>[0]["validateStatus"];
 
@@ -7,3 +9,16 @@ export interface Phone {
   validateStatus?: ValidateStatus;
   errorMsg?: string | null;
 }
+
+export interface FieldType {
+  username?: string;
+  clientPhone?: string;
+  pickupDate?: Dayjs;
+  isDelivery?: boolean;
+  recipientName?: string;
+  recipientPhone?: string;
+  address?: string;
+  deliveryTime?: DeliveryTime;
+}
+
+export type SubmittedValues = Required<FieldType>;

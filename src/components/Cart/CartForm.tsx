@@ -1,7 +1,6 @@
 "use client";
 
-import { DeliveryTime } from "@/interfaces/Order";
-import { Phone } from "@/interfaces/OrderForm";
+import { FieldType, Phone, SubmittedValues } from "@/interfaces/OrderForm";
 import { createOrder } from "@/lib/api";
 import useDebouncedFunction, {
   useAppDispatch,
@@ -12,30 +11,13 @@ import { calculateFullPrice, validatePhoneNumber } from "@/lib/utils";
 import { DELIVERY_TIME_OPTIONS } from "@/shared/constants";
 import { LeftOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, Modal, Select, Switch } from "antd";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { ChangeEvent, MouseEvent, useState } from "react";
 
 interface Props {
   onBackClick: (event: MouseEvent<HTMLButtonElement>) => void;
   rerenderParent: () => void;
   onToggleCart: () => void;
-}
-
-interface FieldType {
-  username?: string;
-  clientPhone?: string;
-  pickupDate?: string;
-  isDelivery?: boolean;
-  recipientName?: string;
-  recipientPhone?: string;
-  address?: string;
-  deliveryTime?: DeliveryTime;
-}
-
-interface SubmittedValues {
-  username: string;
-  clientPhone: string;
-  pickupDate: Dayjs;
 }
 
 const dateFormat = "DD/MM/YYYY HH:mm";
@@ -61,16 +43,41 @@ export default function CartForm({
   const dispatch = useAppDispatch();
 
   async function handleSubmit(values: SubmittedValues) {
-    const { username, clientPhone, pickupDate } = values;
+    console.log(values);
     try {
-      const result = await createOrder({
-        kind: "pickup",
-        clientName: username,
-        clientPhone,
-        pickupTime: pickupDate.toISOString(),
-        total: calculateFullPrice(cart),
-        items: cart.bouquets,
-      });
+      if (values.isDelivery) {
+        const {
+          username,
+          clientPhone,
+          recipientName,
+          recipientPhone,
+          address,
+          deliveryTime,
+        } = values;
+
+        const result = await createOrder({
+          kind: "delivery",
+          clientName: username,
+          clientPhone,
+          recipientName,
+          recipientPhone,
+          address,
+          deliveryTime,
+          total: calculateFullPrice(cart),
+          items: cart.bouquets,
+        });
+      } else {
+        const { username, clientPhone, pickupDate } = values;
+
+        const result = await createOrder({
+          kind: "pickup",
+          clientName: username,
+          clientPhone,
+          pickupTime: pickupDate.toISOString(),
+          total: calculateFullPrice(cart),
+          items: cart.bouquets,
+        });
+      }
 
       Modal.destroyAll();
       dispatch(clearCart());
@@ -137,7 +144,10 @@ export default function CartForm({
         className="max-w-full mx-auto lg:max-w-[50%] mt-6"
         name="basic"
         layout="vertical"
-        initialValues={{ pickupDate: dayjs().add(3, "hour") }}
+        initialValues={{
+          pickupDate: dayjs().add(1, "hour"),
+          isDelivery: false,
+        }}
         onFinish={handleSubmit}
         autoComplete="on"
       >
@@ -163,36 +173,18 @@ export default function CartForm({
           <Input value={clientPhone.value} onChange={onClientPhoneChange} />
         </Form.Item>
 
-        <Form.Item<FieldType>
-          label={"Дата самовывоза"}
-          name={"pickupDate"}
-          hasFeedback
-          rules={[{ required: true, message: "Пожалуйста укажите дату" }]}
-        >
-          <DatePicker
-            placement="bottomLeft"
-            showTime={{
-              format: "HH:mm",
-            }}
-            format={dateFormat}
-            minDate={dayjs()}
-            placeholder=""
-            inputReadOnly={true}
-          />
-        </Form.Item>
-
-        <Form.Item<FieldType> name="isDelivery" valuePropName="checked">
-          <div className="flex gap-4">
+        <div className="flex gap-4 items-baseline">
+          <Form.Item<FieldType> name="isDelivery" valuePropName="checked">
             <Switch
               onChange={toggleDelivery}
               value={isDelivery}
               id="isDelivery"
             />
-            <label htmlFor="isDelivery">Нужна доставка</label>
-          </div>
-        </Form.Item>
+          </Form.Item>
+          <label htmlFor="isDelivery">Нужна доставка</label>
+        </div>
 
-        {isDelivery && (
+        {isDelivery ? (
           <div>
             <Form.Item<FieldType>
               label="ФИО получателя"
@@ -241,6 +233,24 @@ export default function CartForm({
               </Select>
             </Form.Item>
           </div>
+        ) : (
+          <Form.Item<FieldType>
+            label={"Дата самовывоза"}
+            name={"pickupDate"}
+            hasFeedback
+            rules={[{ required: true, message: "Пожалуйста укажите дату" }]}
+          >
+            <DatePicker
+              placement="bottomLeft"
+              showTime={{
+                format: "HH:mm",
+              }}
+              format={dateFormat}
+              minDate={dayjs()}
+              placeholder=""
+              inputReadOnly={true}
+            />
+          </Form.Item>
         )}
 
         <Form.Item className="text-right">
