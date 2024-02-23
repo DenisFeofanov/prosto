@@ -16,6 +16,7 @@ import { ChangeEvent, MouseEvent, useState } from "react";
 interface Props {
   onBackClick: (event: MouseEvent<HTMLButtonElement>) => void;
   rerenderParent: () => void;
+  onToggleCart: () => void;
 }
 
 interface FieldType {
@@ -35,7 +36,11 @@ interface SubmittedValues {
 const dateFormat = "DD/MM/YYYY HH:mm";
 const debounceTime = 500;
 
-export default function CartForm({ onBackClick, rerenderParent }: Props) {
+export default function CartForm({
+  onBackClick,
+  rerenderParent,
+  onToggleCart: toggleCart,
+}: Props) {
   const [clientPhone, setClientPhone] = useState<Phone>({ value: "" });
   const [recipientPhone, setRecipientPhone] = useState<Phone>({ value: "" });
   const [isDelivery, setIsDelivery] = useState(false);
@@ -64,7 +69,7 @@ export default function CartForm({ onBackClick, rerenderParent }: Props) {
 
       Modal.destroyAll();
       dispatch(clearCart());
-      dispatch(toggleCart());
+      toggleCart();
     } catch (error) {
       console.log("TODO: display in UI:", error);
     }

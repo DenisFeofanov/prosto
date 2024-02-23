@@ -117,7 +117,11 @@ export default function CartModal() {
           </div>
         </section>
 
-        <Form onBackClick={handleBackClick} rerenderParent={rerenderModal} />
+        <Form
+          onBackClick={handleBackClick}
+          rerenderParent={rerenderModal}
+          onToggleCart={handleToggleCart}
+        />
       </Carousel>
     </Modal>
   );
