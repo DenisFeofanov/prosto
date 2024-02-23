@@ -1,4 +1,4 @@
-import { SIZES } from "@/shared/constants";
+import { DELIVERY_TIME_OPTIONS, SIZES } from "@/shared/constants";
 
 export interface Bouquet {
   id: string;
@@ -42,11 +42,9 @@ interface DeliveryOrder extends BaseOrder {
   recipientName: string;
   recipientPhone: string;
   address: string;
-  deliveryTime:
-    | "9:00 - 12:00"
-    | "12:00 - 15:00"
-    | "15:00 - 17:00"
-    | "17:00 - 20:00";
+  deliveryTime: DeliveryTime;
 }
+
+export type DeliveryTime = (typeof DELIVERY_TIME_OPTIONS)[number];
 
 export type Order = PickupOrder | DeliveryOrder;

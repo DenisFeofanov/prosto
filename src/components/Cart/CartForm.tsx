@@ -1,15 +1,17 @@
 "use client";
 
-import { Phone, ValidateStatus } from "@/interfaces/OrderForm";
+import { DeliveryTime } from "@/interfaces/Order";
+import { Phone } from "@/interfaces/OrderForm";
 import { createOrder } from "@/lib/api";
 import useDebouncedFunction, {
   useAppDispatch,
   useAppSelector,
 } from "@/lib/hooks";
-import { clearCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
+import { clearCart, selectCart } from "@/lib/redux/cartSlice";
 import { calculateFullPrice, validatePhoneNumber } from "@/lib/utils";
+import { DELIVERY_TIME_OPTIONS } from "@/shared/constants";
 import { LeftOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Modal, Switch } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Select, Switch } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { ChangeEvent, MouseEvent, useState } from "react";
 
@@ -24,7 +26,10 @@ interface FieldType {
   clientPhone?: string;
   pickupDate?: string;
   isDelivery?: boolean;
+  recipientName?: string;
   recipientPhone?: string;
+  address?: string;
+  deliveryTime?: DeliveryTime;
 }
 
 interface SubmittedValues {
@@ -146,7 +151,7 @@ export default function CartForm({
         </Form.Item>
 
         <Form.Item<FieldType>
-          label="Телефон"
+          label="Ваш телефон"
           name="clientPhone"
           hasFeedback
           validateStatus={clientPhone.validateStatus}
@@ -190,7 +195,16 @@ export default function CartForm({
         {isDelivery && (
           <div>
             <Form.Item<FieldType>
-              label="Телефон"
+              label="ФИО получателя"
+              name="recipientName"
+              rules={[{ required: true, message: "Пожалуйста введите ФИО" }]}
+              hasFeedback
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item<FieldType>
+              label="Телефон получателя"
               name="recipientPhone"
               hasFeedback
               validateStatus={recipientPhone.validateStatus}
@@ -206,6 +220,25 @@ export default function CartForm({
                 value={recipientPhone.value}
                 onChange={onRecipientPhoneChange}
               />
+            </Form.Item>
+
+            <Form.Item<FieldType>
+              label="Адрес доставки"
+              name="address"
+              rules={[{ required: true, message: "Пожалуйста введите адрес" }]}
+              hasFeedback
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item<FieldType> name="deliveryTime" label="Время доставки">
+              <Select>
+                {DELIVERY_TIME_OPTIONS.map(deliveryTime => (
+                  <Select.Option key={deliveryTime} value={deliveryTime}>
+                    {deliveryTime}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </div>
         )}
