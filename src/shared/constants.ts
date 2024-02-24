@@ -14,3 +14,7 @@ export const WORKING_HOURS = {
   from: 10,
   to: 20,
 };
+export const TELEGRAM_URL = "https://t.me/prostoflowerz";
+export const VK_URL = "https://vk.com/prosto_flowers";
+export const INSTAGRAM_URL = "https://www.instagram.com/prosto__flowers/";
+export const PHONE = "+7 (932) 111-11-70";
