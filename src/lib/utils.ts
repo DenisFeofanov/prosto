@@ -143,3 +143,19 @@ export const validatePhoneNumber = (
     errorMsg: "Некорректный формат телефона",
   };
 };
+
+export function calculateNonWorkingHours({
+  from,
+  to,
+}: {
+  from: number;
+  to: number;
+}): number[] {
+  const hours = [];
+  for (let i = 0; i < 24; i++) {
+    if (i < from || i >= to) {
+      hours.push(i);
+    }
+  }
+  return hours;
+}

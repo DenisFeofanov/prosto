@@ -14,6 +14,7 @@ export interface FieldType {
   username?: string;
   clientPhone?: string;
   pickupDate?: Dayjs;
+  pickupTime?: Dayjs;
   isDelivery?: boolean;
   recipientName?: string;
   recipientPhone?: string;

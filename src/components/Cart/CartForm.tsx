@@ -10,9 +10,12 @@ import { clearCart, selectCart } from "@/lib/redux/cartSlice";
 import { calculateFullPrice, validatePhoneNumber } from "@/lib/utils";
 import { DELIVERY_TIME_OPTIONS } from "@/shared/constants";
 import { LeftOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Modal, Select, Switch } from "antd";
+import { Button, DatePicker, Form, Input, Select, Switch } from "antd";
+import locale from "antd/es/date-picker/locale/ru_RU";
 import dayjs from "dayjs";
+import "dayjs/locale/ru";
 import { ChangeEvent, MouseEvent, useState } from "react";
+import TimePicker from "../TimePicker";
 
 interface Props {
   onBackClick: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -22,7 +25,6 @@ interface Props {
   setIsLoading: (isLoading: boolean) => void;
 }
 
-const dateFormat = "DD/MM/YYYY HH:mm";
 const debounceTime = 500;
 
 export default function CartForm({
@@ -71,13 +73,16 @@ export default function CartForm({
           items: cart.bouquets,
         });
       } else {
-        const { username, clientPhone, pickupDate } = values;
+        const { username, clientPhone, pickupDate, pickupTime } = values;
+        const combinedDateTime = pickupDate
+          .set("hour", pickupTime.hour())
+          .set("minute", pickupTime.minute());
 
         const result = await createOrder({
           kind: "pickup",
           clientName: username,
           clientPhone,
-          pickupTime: pickupDate.toISOString(),
+          pickupTime: combinedDateTime.toISOString(),
           total: calculateFullPrice(cart),
           items: cart.bouquets,
         });
@@ -150,7 +155,6 @@ export default function CartForm({
         name="basic"
         layout="vertical"
         initialValues={{
-          pickupDate: dayjs().add(1, "hour"),
           isDelivery: false,
         }}
         onFinish={handleSubmit}
@@ -162,7 +166,7 @@ export default function CartForm({
           rules={[{ required: true, message: "Пожалуйста введите ФИО" }]}
           hasFeedback
         >
-          <Input />
+          <Input size="large" />
         </Form.Item>
 
         <Form.Item<FieldType>
@@ -175,7 +179,11 @@ export default function CartForm({
             { required: true, message: "Пожалуйста введите номер телефона" },
           ]}
         >
-          <Input value={clientPhone.value} onChange={onClientPhoneChange} />
+          <Input
+            value={clientPhone.value}
+            onChange={onClientPhoneChange}
+            size="large"
+          />
         </Form.Item>
 
         <div className="flex gap-4 items-baseline">
@@ -197,7 +205,7 @@ export default function CartForm({
               rules={[{ required: true, message: "Пожалуйста введите ФИО" }]}
               hasFeedback
             >
-              <Input />
+              <Input size="large" />
             </Form.Item>
 
             <Form.Item<FieldType>
@@ -216,6 +224,7 @@ export default function CartForm({
               <Input
                 value={recipientPhone.value}
                 onChange={onRecipientPhoneChange}
+                size="large"
               />
             </Form.Item>
 
@@ -225,11 +234,11 @@ export default function CartForm({
               rules={[{ required: true, message: "Пожалуйста введите адрес" }]}
               hasFeedback
             >
-              <Input />
+              <Input size="large" />
             </Form.Item>
 
             <Form.Item<FieldType> name="deliveryTime" label="Время доставки">
-              <Select>
+              <Select size="large">
                 {DELIVERY_TIME_OPTIONS.map(deliveryTime => (
                   <Select.Option key={deliveryTime} value={deliveryTime}>
                     {deliveryTime}
@@ -239,23 +248,31 @@ export default function CartForm({
             </Form.Item>
           </div>
         ) : (
-          <Form.Item<FieldType>
-            label={"Дата самовывоза"}
-            name={"pickupDate"}
-            rules={[{ required: true, message: "Пожалуйста укажите дату" }]}
-          >
-            <DatePicker
-              placement="bottomLeft"
-              showTime={{
-                format: "HH:mm",
-              }}
-              format={dateFormat}
-              minDate={dayjs()}
-              placeholder=""
-              inputReadOnly={true}
-              allowClear={false}
-            />
-          </Form.Item>
+          <>
+            <Form.Item<FieldType>
+              label={"Дата самовывоза"}
+              name={"pickupDate"}
+              rules={[{ required: true, message: "Пожалуйста укажите дату" }]}
+            >
+              <DatePicker
+                size="large"
+                locale={locale}
+                format={"DD/MM/YYYY"}
+                minDate={dayjs()}
+                placeholder=""
+                inputReadOnly={true}
+                allowClear={false}
+              />
+            </Form.Item>
+
+            <Form.Item<FieldType>
+              label={"Время самовывоза"}
+              name={"pickupTime"}
+              rules={[{ required: true, message: "Пожалуйста укажите время" }]}
+            >
+              <TimePicker />
+            </Form.Item>
+          </>
         )}
 
         <Form.Item className="text-right">
