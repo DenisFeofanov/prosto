@@ -18,7 +18,6 @@ export default function CartButton() {
       icon={<ShoppingCartOutlined />}
       badge={{ count: cart.bouquets.length }}
       onClick={handleClick}
-      tooltip="Корзина"
     />
   );
 }
