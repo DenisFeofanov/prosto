@@ -137,7 +137,7 @@ export async function changeAmount(amount: number, id: string) {
 
     return data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 }
