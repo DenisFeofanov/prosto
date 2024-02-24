@@ -20,6 +20,7 @@ export interface FieldType {
   recipientPhone?: string;
   address?: string;
   deliveryTime?: DeliveryTime;
+  comment?: string;
 }
 
 export type SubmittedValues = Required<FieldType>;

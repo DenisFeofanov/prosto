@@ -7,6 +7,7 @@ import {
   ADDRESS,
   CLIENT_NAME,
   CLIENT_PHONE,
+  COMMENT,
   DELIVERY_TIME,
   ORDER,
   PICKUP_TIME,
@@ -49,6 +50,15 @@ export async function POST(request: Request) {
       },
       [CLIENT_PHONE]: {
         phone_number: order.clientPhone,
+      },
+      [COMMENT]: {
+        rich_text: [
+          {
+            text: {
+              content: order.comment || "",
+            },
+          },
+        ],
       },
     };
 

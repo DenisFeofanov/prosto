@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/ru";
 import { ChangeEvent, MouseEvent, useState } from "react";
 import TimePicker from "../TimePicker";
+import TextArea from "antd/es/input/TextArea";
 
 interface Props {
   onBackClick: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -59,6 +60,7 @@ export default function CartForm({
           recipientPhone,
           address,
           deliveryTime,
+          comment,
         } = values;
 
         const result = await createOrder({
@@ -71,9 +73,11 @@ export default function CartForm({
           deliveryTime,
           total: calculateFullPrice(cart),
           items: cart.bouquets,
+          comment,
         });
       } else {
-        const { username, clientPhone, pickupDate, pickupTime } = values;
+        const { username, clientPhone, pickupDate, pickupTime, comment } =
+          values;
         const combinedDateTime = pickupDate
           .set("hour", pickupTime.hour())
           .set("minute", pickupTime.minute());
@@ -85,6 +89,7 @@ export default function CartForm({
           pickupTime: combinedDateTime.toISOString(),
           total: calculateFullPrice(cart),
           items: cart.bouquets,
+          comment,
         });
       }
 
@@ -274,6 +279,14 @@ export default function CartForm({
             </Form.Item>
           </>
         )}
+
+        <Form.Item<FieldType> label={"Комментарий"} name={"comment"}>
+          <TextArea
+            placeholder="Как проехать, пожелания и прочее"
+            autoSize={{ minRows: 2, maxRows: 10 }}
+            allowClear
+          />
+        </Form.Item>
 
         <Form.Item className="text-right">
           <Button

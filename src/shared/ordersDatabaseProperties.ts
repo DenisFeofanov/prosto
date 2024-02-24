@@ -7,3 +7,4 @@ export const RECIPIENT_NAME = "ФИО получателя";
 export const RECIPIENT_PHONE = "Телефон получателя";
 export const ADDRESS = "Адрес";
 export const DELIVERY_TIME = "Время доставки";
+export const COMMENT = "Комментарий";

@@ -30,6 +30,7 @@ interface BaseOrder {
   items: CartItem[];
   clientName: string;
   clientPhone: string;
+  comment?: string;
 }
 
 interface PickupOrder extends BaseOrder {
