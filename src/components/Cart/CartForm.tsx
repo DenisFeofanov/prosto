@@ -242,7 +242,11 @@ export default function CartForm({
               <Input size="large" />
             </Form.Item>
 
-            <Form.Item<FieldType> name="deliveryTime" label="Время доставки">
+            <Form.Item<FieldType>
+              name="deliveryTime"
+              label="Время доставки"
+              rules={[{ required: true, message: "Пожалуйста введите адрес" }]}
+            >
               <Select size="large">
                 {DELIVERY_TIME_OPTIONS.map(deliveryTime => (
                   <Select.Option key={deliveryTime} value={deliveryTime}>
