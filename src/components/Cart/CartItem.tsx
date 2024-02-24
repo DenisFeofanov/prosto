@@ -27,7 +27,6 @@ interface Props {
 
 export default function CartItem({ cartItem }: Props) {
   const [note, setNote] = useState<string>(cartItem.note || "");
-  const [size, setSize] = useState<Size>(DEFAULT_SIZE);
   const dispatch = useAppDispatch();
   const debouncedDispatch = useDebouncedFunction(dispatch, 1000);
   const cart = useAppSelector(selectCart);
@@ -40,8 +39,7 @@ export default function CartItem({ cartItem }: Props) {
   }
 
   function handleSizeSelect(size: Size) {
-    setSize(size);
-    debouncedDispatch(updateCartItem({ ...cartItem, size }));
+    dispatch(updateCartItem({ ...cartItem, size }));
   }
 
   const bouquet = cartItem.data;
@@ -62,10 +60,10 @@ export default function CartItem({ cartItem }: Props) {
     <>
       <ClearItemButton
         onClick={handleRemoveClick}
-        className="ml-auto block mb-2 lg:hidden"
+        className="ml-auto block mb-4 lg:hidden"
       />
 
-      <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)]">
         <Image
           className="rounded-md"
           src={bouquet.photos[0]}
@@ -78,7 +76,7 @@ export default function CartItem({ cartItem }: Props) {
 
         <div className="flex flex-col justify-between gap-3">
           <div className="flex flex-col-reverse flex-wrap lg:justify-between lg:flex-row lg:gap-3">
-            <div>
+            <div className="flex flex-col gap-3 items-start">
               <Typography.Title
                 level={4}
                 style={{
@@ -88,10 +86,10 @@ export default function CartItem({ cartItem }: Props) {
                 {bouquet.name}
               </Typography.Title>
 
-              {bouquet.hasSize && (
+              {cartItem.size !== undefined && (
                 <SizeDropdown
                   disabled={calculateRemainingAmount(bouquet, cart) <= 0}
-                  selectedSize={size}
+                  selectedSize={cartItem.size}
                   onSelect={handleSizeSelect}
                 />
               )}

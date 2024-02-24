@@ -14,14 +14,14 @@ export type Size = (typeof SIZES)[number];
 
 export interface OrderedBouquet {
   data: Bouquet;
-  size: string;
+  size?: string;
   note?: string;
 }
 
 export interface CartItem {
   cartId: string;
   data: Bouquet;
-  size: string;
+  size?: string;
   note?: string;
 }
 

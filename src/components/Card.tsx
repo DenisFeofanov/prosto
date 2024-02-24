@@ -21,7 +21,7 @@ export default function Card({ bouquet, onCardClick }: Props) {
       addToCart([
         {
           data: bouquet,
-          size: DEFAULT_SIZE,
+          ...(bouquet.hasSize ? { size: DEFAULT_SIZE } : {}),
         },
       ])
     );

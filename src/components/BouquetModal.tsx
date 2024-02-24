@@ -25,8 +25,8 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
   function handleAddToCartClick(bouquet: Bouquet) {
     const orderedBouquets = Array.from({ length: amountOrdered }, () => ({
       data: bouquet,
-      size,
       note,
+      ...(bouquet.hasSize ? { size } : {}),
     }));
 
     setAmountOrdered(1);
