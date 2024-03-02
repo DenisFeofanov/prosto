@@ -5,6 +5,8 @@ import { Bouquet } from "@/interfaces/Order";
 import { useState } from "react";
 import Card from "./Card";
 import ShopFooter from "./Footer";
+import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
   bouquets: Bouquet[];
@@ -21,7 +23,20 @@ export default function Home({ bouquets }: Props) {
 
   return (
     <>
-      <main className="px-10 pt-10 lg:px-20 lg:pt-20">
+      <main className="px-10 lg:px-20">
+        <div className="flex justify-center">
+          <Link href={"/"}>
+            <Image
+              className="w-[200px] lg:w-[22rem]"
+              src="\logo_vertical_name+flower+descriptor_gray.svg"
+              alt="Логотип ПРОСТО"
+              priority
+              width={100}
+              height={100}
+            />
+          </Link>
+        </div>
+
         <ul
           className={`grid justify-center items-start grid-cols-[repeat(1,minmax(0,18.75rem))] sm:grid-cols-[repeat(2,minmax(0,18.75rem))] md:grid-cols-[repeat(3,minmax(0,18.75rem))] lg:grid-cols-[repeat(4,minmax(0,18.75rem))] gap-10`}
         >
