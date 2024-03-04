@@ -54,7 +54,8 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
   const chosenSizePhotos = bouquet[`photosSize${size}`];
   const remainingAmount = calculateRemainingAmount(bouquet, cart);
   const isDisabled = remainingAmount <= 0;
-  let photos = bouquet.hasSize ? chosenSizePhotos : bouquet.photos;
+  const photos = bouquet.hasSize ? chosenSizePhotos : bouquet.photos;
+  const price = bouquet.hasSize ? bouquet[`priceSize${size}`] : bouquet.price;
 
   return (
     <Modal
@@ -73,7 +74,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
         <div className="mt-4 lg:m-0">
           <Typography.Title level={2}>{bouquet.name}</Typography.Title>
           <p className="text-gray-600 mb-4 text-base">{bouquet.description}</p>
-          <p className="text-lg font-bold">{formatPrice(bouquet.price)}</p>
+          <p className="text-lg font-bold">{formatPrice(price)}</p>
 
           <div className="w-full mt-4">
             <Space>

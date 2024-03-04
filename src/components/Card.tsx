@@ -1,7 +1,7 @@
 import { Bouquet } from "@/interfaces/Order";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addToCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
-import { calculateRemainingAmount } from "@/lib/utils";
+import { calculateRemainingAmount, formatPrice } from "@/lib/utils";
 import { IMAGE_WIDTH, IMAGE_HEIGHT, DEFAULT_SIZE } from "@/shared/constants";
 import { Button } from "antd";
 import Image from "next/image";
@@ -31,6 +31,9 @@ export default function Card({ bouquet, onCardClick }: Props) {
   const photos = bouquet.hasSize
     ? bouquet[`photosSize${DEFAULT_SIZE}`]
     : bouquet.photos;
+  const price = bouquet.hasSize
+    ? bouquet[`priceSize${DEFAULT_SIZE}`]
+    : bouquet.price;
 
   return (
     <>
@@ -50,7 +53,7 @@ export default function Card({ bouquet, onCardClick }: Props) {
         />
         <div className="mt-4">
           <h2 className="text-2xl mb-4">{bouquet.name}</h2>
-          <p className="mt-2">{bouquet.price} руб.</p>
+          <p className="mt-2">{formatPrice(price)}</p>
         </div>
       </button>
 

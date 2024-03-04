@@ -56,9 +56,13 @@ export default function CartItem({ cartItem }: Props) {
     });
   }
 
-  const chosenSizePhotos =
-    bouquet[`photosSize${cartItem.size || DEFAULT_SIZE}`];
-  let photos = cartItem.size !== undefined ? chosenSizePhotos : bouquet.photos;
+  let photos =
+    cartItem.size !== undefined
+      ? bouquet[`photosSize${cartItem.size}`]
+      : bouquet.photos;
+  const price = cartItem.size
+    ? bouquet[`priceSize${cartItem.size}`]
+    : bouquet.price;
 
   return (
     <>
@@ -98,7 +102,7 @@ export default function CartItem({ cartItem }: Props) {
               )}
 
               <Typography.Text className="block">
-                {formatPrice(bouquet.price)}
+                {formatPrice(price)}
               </Typography.Text>
             </div>
 

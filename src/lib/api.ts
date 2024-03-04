@@ -5,6 +5,7 @@ import {
   NAME,
   PHOTOS_NOT_EMPTY,
   PRICE,
+  PRICE_NOT_EMPTY,
 } from "@/shared/bouquetsDatabaseProperties";
 import { NOTION_STOCK_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
 import { Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
@@ -52,9 +53,9 @@ export async function fetchBouquets(): Promise<Bouquet[]> {
             },
           },
           {
-            property: PRICE,
-            number: {
-              greater_than: 0,
+            property: PRICE_NOT_EMPTY,
+            checkbox: {
+              equals: true,
             },
           },
           {

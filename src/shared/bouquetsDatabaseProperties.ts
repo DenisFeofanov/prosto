@@ -8,3 +8,7 @@ export const PHOTOS_S = "Фото S";
 export const PHOTOS_M = "Фото M";
 export const PHOTOS_L = "Фото L";
 export const PHOTOS_NOT_EMPTY = "Есть фото";
+export const PRICE_NOT_EMPTY = "Есть цена";
+export const PRICE_S = "Цена S";
+export const PRICE_M = "Цена M";
+export const PRICE_L = "Цена L";

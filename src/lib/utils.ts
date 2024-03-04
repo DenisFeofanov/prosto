@@ -11,6 +11,9 @@ import {
   PHOTOS_M,
   PHOTOS_S,
   PRICE,
+  PRICE_L,
+  PRICE_M,
+  PRICE_S,
 } from "@/shared/bouquetsDatabaseProperties";
 import { isFullPage } from "@notionhq/client";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
@@ -33,7 +36,10 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
       flower.properties[PHOTOS].type === "files" &&
       flower.properties[PHOTOS_S].type === "files" &&
       flower.properties[PHOTOS_M].type === "files" &&
-      flower.properties[PHOTOS_L].type === "files"
+      flower.properties[PHOTOS_L].type === "files" &&
+      flower.properties[PRICE_S].type === "number" &&
+      flower.properties[PRICE_M].type === "number" &&
+      flower.properties[PRICE_L].type === "number"
     ) {
       return {
         id: flower.id,
@@ -46,6 +52,9 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
         photosSizeS: parsePhotos(flower.properties[PHOTOS_S].files),
         photosSizeM: parsePhotos(flower.properties[PHOTOS_M].files),
         photosSizeL: parsePhotos(flower.properties[PHOTOS_L].files),
+        priceSizeS: flower.properties[PRICE_S].number || 0,
+        priceSizeM: flower.properties[PRICE_M].number || 0,
+        priceSizeL: flower.properties[PRICE_L].number || 0,
       };
     } else {
       throw new Error(
@@ -88,12 +97,11 @@ export function parsePhotos(photos: Files): string[] {
 
 export function convertOrderToString(orderedBouquets: CartItem[]): string {
   return orderedBouquets
-    .reduce((acc, orderedBouquet) => {
-      const size = orderedBouquet.size ? `размер ${orderedBouquet.size}, ` : "";
-      const note = orderedBouquet.note
-        ? `открытка "${orderedBouquet.note}", `
-        : "";
-      return `${acc}- ${orderedBouquet.data.name}, ${size}${note}цена ${orderedBouquet.data.price}р\n`;
+    .reduce((acc, { data, size, note }) => {
+      const price = size ? data[`priceSize${size}`] : data.price;
+      const sizeText = size ? `размер ${size}, ` : "";
+      const noteText = note ? `открытка "${note}", ` : "";
+      return `${acc}- ${data.name}, ${sizeText}${noteText}цена ${price}р\n`;
     }, "")
     .trimEnd();
 }
@@ -145,7 +153,10 @@ export function createModalShowFunc() {
 }
 
 export function calculateFullPrice(cart: CartState): number {
-  return cart.bouquets.reduce((acc, { data }) => acc + data.price, 0);
+  return cart.bouquets.reduce((acc, { data, size }) => {
+    const price = size ? data[`priceSize${size}`] : data.price;
+    return acc + price;
+  }, 0);
 }
 
 export const validatePhoneNumber = (
