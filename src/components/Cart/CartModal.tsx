@@ -1,7 +1,11 @@
 import CartItem from "@/components/Cart/CartItem";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { clearCart, selectCart, toggleCart } from "@/lib/redux/cartSlice";
-import { createModalShowFunc } from "@/lib/utils";
+import {
+  calculateFullPrice,
+  createModalShowFunc,
+  formatPrice,
+} from "@/lib/utils";
 import { Button, Carousel, Divider, Modal, Typography } from "antd";
 import { MouseEvent, MouseEventHandler, useRef, useState } from "react";
 import ClearButton from "./ClearButton";
@@ -95,6 +99,15 @@ export default function CartModal() {
             })}
           </ul>
           <Divider />
+
+          <div className="flex justify-between items-center mb-4">
+            <Typography.Text className="text-lg font-semibold">
+              Итого:
+            </Typography.Text>
+            <Typography.Text className="text-lg font-semibold">
+              {formatPrice(calculateFullPrice(cart))}
+            </Typography.Text>
+          </div>
 
           <div className="flex justify-between flex-wrap gap-6">
             <ClearButton
