@@ -56,6 +56,10 @@ export default function CartItem({ cartItem }: Props) {
     });
   }
 
+  const chosenSizePhotos =
+    bouquet[`photosSize${cartItem.size || DEFAULT_SIZE}`];
+  let photos = cartItem.size !== undefined ? chosenSizePhotos : bouquet.photos;
+
   return (
     <>
       <ClearItemButton
@@ -66,12 +70,11 @@ export default function CartItem({ cartItem }: Props) {
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)]">
         <Image
           className="rounded-md"
-          src={bouquet.photos[0]}
+          src={photos[0]}
           alt="Превью букета"
-          // not wider than 500px
-          sizes="400px"
           width={IMAGE_WIDTH}
           height={IMAGE_HEIGHT}
+          sizes="(max-width: 1024px) 400px, 150px"
         />
 
         <div className="flex flex-col justify-between gap-3">

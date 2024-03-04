@@ -51,8 +51,10 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
 
   if (bouquet === null) return;
 
+  const chosenSizePhotos = bouquet[`photosSize${size}`];
   const remainingAmount = calculateRemainingAmount(bouquet, cart);
   const isDisabled = remainingAmount <= 0;
+  let photos = bouquet.hasSize ? chosenSizePhotos : bouquet.photos;
 
   return (
     <Modal
@@ -66,7 +68,7 @@ export default function BouquetModal({ bouquet, isOpen, closeModal }: Props) {
       }}
     >
       <div className="pt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:pt-0 lg:gap-16">
-        <BouquetCarousel photos={bouquet.photos} />
+        <BouquetCarousel photos={photos} />
 
         <div className="mt-4 lg:m-0">
           <Typography.Title level={2}>{bouquet.name}</Typography.Title>

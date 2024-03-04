@@ -34,6 +34,7 @@ export default function BouquetCarousel({ photos }: Props) {
             width={IMAGE_WIDTH}
             height={IMAGE_HEIGHT}
             alt="Фото букета"
+            sizes="(max-width: 500px) 100vw, 33vw"
           />
         ))}
       </Carousel>

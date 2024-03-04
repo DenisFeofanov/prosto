@@ -4,3 +4,7 @@ export const DESCRIPTION = "Описание";
 export const PRICE = "Цена";
 export const HAS_SIZE = "Есть размер";
 export const PHOTOS = "Фото";
+export const PHOTOS_S = "Фото S";
+export const PHOTOS_M = "Фото M";
+export const PHOTOS_L = "Фото L";
+export const PHOTOS_NOT_EMPTY = "Есть фото";

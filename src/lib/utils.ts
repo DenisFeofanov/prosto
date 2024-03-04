@@ -7,6 +7,9 @@ import {
   HAS_SIZE,
   NAME,
   PHOTOS,
+  PHOTOS_L,
+  PHOTOS_M,
+  PHOTOS_S,
   PRICE,
 } from "@/shared/bouquetsDatabaseProperties";
 import { isFullPage } from "@notionhq/client";
@@ -25,8 +28,12 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
       flower.properties[NAME].type === "title" &&
       flower.properties[AMOUNT].type === "number" &&
       flower.properties[DESCRIPTION].type === "rich_text" &&
-      flower.properties[HAS_SIZE].type === "checkbox" &&
-      flower.properties[PHOTOS].type === "files"
+      flower.properties[HAS_SIZE].type === "formula" &&
+      flower.properties[HAS_SIZE].formula.type === "boolean" &&
+      flower.properties[PHOTOS].type === "files" &&
+      flower.properties[PHOTOS_S].type === "files" &&
+      flower.properties[PHOTOS_M].type === "files" &&
+      flower.properties[PHOTOS_L].type === "files"
     ) {
       return {
         id: flower.id,
@@ -34,20 +41,11 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
         name: flower.properties[NAME].title[0].plain_text,
         description: flower.properties[DESCRIPTION].rich_text[0].plain_text,
         amountAvailable: flower.properties[AMOUNT].number as number,
-        hasSize: flower.properties[HAS_SIZE].checkbox,
-        photos: flower.properties[PHOTOS].files.map(file => {
-          if (file.type === "external") {
-            return file.external.url;
-          }
-
-          if (file.type === "file") {
-            return file.file.url;
-          }
-
-          throw new Error(
-            "Failed to parse photos. Check that the photos are in the correct format."
-          );
-        }),
+        hasSize: flower.properties[HAS_SIZE].formula.boolean as boolean,
+        photos: parsePhotos(flower.properties[PHOTOS].files),
+        photosSizeS: parsePhotos(flower.properties[PHOTOS_S].files),
+        photosSizeM: parsePhotos(flower.properties[PHOTOS_M].files),
+        photosSizeL: parsePhotos(flower.properties[PHOTOS_L].files),
       };
     } else {
       throw new Error(
@@ -55,6 +53,37 @@ export function parseBouquets(data: QueryDatabaseResponse): Bouquet[] {
       );
     }
   });
+}
+
+interface FileEntry {
+  file: {
+    url: string;
+    expiry_time: string;
+  };
+  name: string;
+  type?: "file";
+}
+
+interface ExternalEntry {
+  external: {
+    url: string;
+  };
+  name: string;
+  type?: "external";
+}
+
+type Files = (FileEntry | ExternalEntry)[];
+
+export function parsePhotos(photos: Files): string[] {
+  const photoUrls: string[] = [];
+  for (const file of photos) {
+    if (file.type === "external") {
+      photoUrls.push(file.external.url);
+    } else if (file.type === "file") {
+      photoUrls.push(file.file.url);
+    }
+  }
+  return photoUrls;
 }
 
 export function convertOrderToString(orderedBouquets: CartItem[]): string {

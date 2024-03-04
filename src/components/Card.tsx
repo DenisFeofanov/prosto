@@ -28,6 +28,10 @@ export default function Card({ bouquet, onCardClick }: Props) {
     dispatch(toggleCart());
   };
 
+  const photos = bouquet.hasSize
+    ? bouquet[`photosSize${DEFAULT_SIZE}`]
+    : bouquet.photos;
+
   return (
     <>
       <button
@@ -37,11 +41,12 @@ export default function Card({ bouquet, onCardClick }: Props) {
       >
         <Image
           className="rounded-md fine-pointer:group-hover:shadow-2xl"
-          src={bouquet.photos[0]}
+          src={photos[0]}
           width={IMAGE_WIDTH}
           height={IMAGE_HEIGHT}
           alt="Фото букета"
           priority
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
         <div className="mt-4">
           <h2 className="text-2xl mb-4">{bouquet.name}</h2>

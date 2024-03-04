@@ -1,10 +1,9 @@
-import { Bouquet } from "@/interfaces/Order";
-import { Order } from "@/interfaces/Order";
+import { Bouquet, Order } from "@/interfaces/Order";
 import {
   AMOUNT,
   DESCRIPTION,
   NAME,
-  PHOTOS,
+  PHOTOS_NOT_EMPTY,
   PRICE,
 } from "@/shared/bouquetsDatabaseProperties";
 import { NOTION_STOCK_DATABASE_ID, NOTION_TOKEN } from "@/shared/envVariables";
@@ -59,9 +58,9 @@ export async function fetchBouquets(): Promise<Bouquet[]> {
             },
           },
           {
-            property: PHOTOS,
-            files: {
-              is_not_empty: true,
+            property: PHOTOS_NOT_EMPTY,
+            checkbox: {
+              equals: true,
             },
           },
         ],

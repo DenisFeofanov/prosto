@@ -8,20 +8,23 @@ export interface Bouquet {
   amountAvailable: number;
   hasSize: boolean;
   photos: string[];
+  photosSizeS: string[];
+  photosSizeM: string[];
+  photosSizeL: string[];
 }
 
 export type Size = (typeof SIZES)[number];
 
 export interface OrderedBouquet {
   data: Bouquet;
-  size?: string;
+  size?: Size;
   note?: string;
 }
 
 export interface CartItem {
   cartId: string;
   data: Bouquet;
-  size?: string;
+  size?: Size;
   note?: string;
 }
 
